@@ -192,7 +192,7 @@ WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* pale
             *allocatedBuffer = 19778;
             memcpy(allocatedBuffer + 1, bmpHeaderInfo, 0x34u);
             memcpy(allocatedBuffer + 27, paletteData, 4 * ((4 * paletteSize) >> 2));
-            CopyAndManipulateMemoryBlock(allocatedBuffer + 27, paletteSize);
+            CopyAndManipulateMemoryBlock((char*)allocatedBuffer + 27, paletteSize);
             pixelPtr = (BYTE*)(resultBuffer + bmpHeaderInfo[2]);
             memcpy(resultBuffer + bmpHeaderInfo[2], currentSource, remainingPixels);
             if (colorOffset && remainingPixels > 0)
@@ -554,10 +554,10 @@ BYTE* __cdecl ProcessBitmapData(
         return 0;
 
     if (outColorCount)
-        *outColorCount = GetBitmapPalette((void*)bitmapHandle);
+        *outColorCount = (DWORD)GetBitmapPalette((uintptr_t)bitmapHandle);
 
-    flipBitmapVertically((void*)bitmapHandle);
-    buffer = GetBitmapBufferDetails((intptr_t)bitmapHandle, &imgWidth, &imgHeight);
+    flipBitmapVertically((uintptr_t)bitmapHandle);
+    buffer = (BYTE*)GetBitmapBufferDetails(bitmapHandle, (DWORD*)&imgWidth, (DWORD*)&imgHeight);
     if (!buffer)
         return 0;
 
@@ -595,7 +595,7 @@ int __cdecl flipBitmapVertically(int bitmapHandle)
     if (!bitmapHandle)
         return -1;
 
-    bufferDetails = GetBitmapBufferDetails(bitmapHandle, &bitmapWidth, &bitmapHeight);
+    bufferDetails = GetBitmapBufferDetails((void*)bitmapHandle, &bitmapWidth, &bitmapHeight);
     if (!bufferDetails)
         return -1;
 

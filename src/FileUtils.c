@@ -7,6 +7,8 @@
 #include <mbstring.h> // For _mbsdec
 #include <stdlib.h>
 
+
+
 unsigned char byte_6822E8[0x1000];
 extern int* dataStructurePtr;
 extern char LIGHTS2_NCD[MAX_PATH_LENGTH];
@@ -98,7 +100,7 @@ int __cdecl DecompressData(
 }
 
 void* __cdecl PerformSpecialDataProcessing(
-    int sourceParam,
+    unsigned __int8* sourceParam,
     int operationType,
     int decompressionParam,
     size_t outputStart,
@@ -127,7 +129,7 @@ void* __cdecl PerformSpecialDataProcessing(
         return 0;
 
     if (HandleDataProcessing(
-        sourceParam,
+        (unsigned __int8*)sourceParam,
         operationType,
         decompressionParam,
         outputStart,
@@ -538,11 +540,11 @@ int __cdecl HandleDataProcessing(
     return processedLength;
 }
 
-void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset, size_t Size, size_t* processedSize) {
-    int* pDatastructure;
-    void* PortionOfFile;
-    void* pResult;
-    char UpperCaseFileName[260];
+void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset, size_t size, size_t* processedSize) {
+    int* dataStructure;
+    void* portionOfFile;
+    void* result;
+    char upperCaseFileName[260];
 
     if (!fileName || !LIGHTS2_NCD || !dataStructurePtr)
         return NULL;
@@ -550,35 +552,35 @@ void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset,
     if (processedSize)
         *processedSize = 0;
 
-    pDatastructure = dataStructurePtr;
-    strncpy_s(UpperCaseFileName, sizeof(UpperCaseFileName), fileName, _TRUNCATE);
-    convertToUppercaseShiftJIS((unsigned char*)UpperCaseFileName);
+    dataStructure = dataStructurePtr;
+    strncpy(upperCaseFileName, fileName, sizeof(upperCaseFileName) - 1);
+    upperCaseFileName[sizeof(upperCaseFileName) - 1] = '\0';
+    convertToUppercaseShiftJIS((unsigned char*)upperCaseFileName);
 
-    if (*pDatastructure != -1) {
-        while (pDatastructure[1] != -1 && pDatastructure[2] != -1 && pDatastructure[3] != -1) {
-            if (strcmp(UpperCaseFileName, (const char*)pDatastructure[4]) == 0) {
-                if (pDatastructure[3] < fileOffset)
+    if (*dataStructure != -1) {
+        while (dataStructure[1] != -1 && dataStructure[2] != -1 && dataStructure[3] != -1) {
+            if (strcmp(upperCaseFileName, (const char*)dataStructure[4]) == 0) {
+                if ((unsigned int)dataStructure[3] < fileOffset)
                     return NULL;
 
-                // Correctly cast LIGHTS2_NCD to LPCSTR
-                PortionOfFile = ReadPortionOfFile((LPCSTR)LIGHTS2_NCD, *pDatastructure, pDatastructure[2], 0);
-                if (!PortionOfFile)
+                portionOfFile = ReadPortionOfFile((const char*)LIGHTS2_NCD, *dataStructure, dataStructure[2], 0);
+                if (!portionOfFile)
                     return NULL;
 
-                pResult = PerformSpecialDataProcessing(
-                    (int)PortionOfFile,
-                    pDatastructure[1],
-                    pDatastructure[2],
+                result = PerformSpecialDataProcessing(
+                    (int)portionOfFile,
+                    dataStructure[1],
+                    dataStructure[2],
                     fileOffset,
-                    pDatastructure[3],
-                    Size,
+                    dataStructure[3],
+                    size,
                     processedSize);
 
-                free(PortionOfFile);
-                return pResult;
+                free(portionOfFile);
+                return result;
             }
-            pDatastructure += 5;
-            if (*pDatastructure == -1)
+            dataStructure += 5;
+            if (*dataStructure == -1)
                 return NULL;
         }
     }

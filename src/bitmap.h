@@ -57,6 +57,7 @@ int flipImageVertically(char* imageData, int width, int height);
 HPALETTE CreateCustomPalette(intptr_t colorTableSize, int numEntries);
 
 HPALETTE GetBitmapPalette(int bitmapHandle);
+
 HPALETTE handleGlobalPalette(HPALETTE palette);
 
 

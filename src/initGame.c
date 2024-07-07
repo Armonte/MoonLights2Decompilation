@@ -12,7 +12,7 @@
 #include "KeyboardManager.h"
 #include "audio.h"
 #include "timers.h"
-
+#include <direct.h>
 uint8_t* p2_dataLimit = NULL;
 char FullPath[260] = { 0 };
 int g_globalTimerValue = 0;
@@ -51,6 +51,15 @@ int spriteDataLimitArray = 0;
 int dword_6B2E14 = 0;
 int* p1_meter_Stocks = NULL;
 
+#ifdef _MSC_VER
+__declspec(dllimport)
+#endif
+void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
+
+#ifdef _MSC_VER
+__declspec(dllimport)
+#endif
+void _makepath(char* path, const char* drive, const char* dir, const char* fname, const char* ext);
 
 
 int css_general(void) {
@@ -82,8 +91,8 @@ extern int updateRenderingData(uint32_t imageId, int renderFlag, int xOffset, in
     int xPos, int yPos, int width, int height, int renderType);
 
 int CustomDirectoryProcessing(void);
-void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
-void _makepath(char* path, const char* drive, const char* dir, const char* fname, const char* ext);
+//void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
+//void _makepath(char* path, const char* drive, const char* dir, const char* fname, const char* ext);
 //void CustomDataCopy(const char* path, void* array);
 int CustomAudioControl(void);
 //void ProcessJoysticks(void* hWndParent);
@@ -220,7 +229,7 @@ int initGame() {
     int loopTimer;
     int resetTimer;
     int savedRounds;
-    uint8_t** charMeterPointer;
+    int16_t** charMeterPointer;
     int savedRoundsTemp;
     int outWidth;
     int outHeight;
@@ -240,7 +249,7 @@ int initGame() {
     byte_6B2F74 = customDirResult;
     _splitpath_s(FullPath, drivePath, sizeof(drivePath), directoryPath, sizeof(directoryPath), fileName, sizeof(fileName), extension, sizeof(extension));
     _makepath_s(fullPathBuffer, sizeof(fullPathBuffer), drivePath, directoryPath, "lights2", "ncd");
-    CustomDataCopy(fullPathBuffer, &ncd_array);
+    CustomDataCopy(fullPathBuffer, (int)ncd_array);
     dword_6B3004 = 0;
     byte_6B2BB8 = 0;
     byte_6B2BB9 = 0;
@@ -587,8 +596,8 @@ void initAndRunGame()
     logoBitmapData = ProcessAndFindMatchingEntry("logo.bmp", 0, 0xFFFFF, 0);
     if (logoBitmapData)
     {
-        bitmapDataOffset = ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
-        BitmapColorTableSize = GetBitmapColorTableSize(logoBitmapData, 0);
+        bitmapDataOffset = (byte*)ProcessBitmapData((int)logoBitmapData, 0, 0, &outWidth, &originalHeight);
+        BitmapColorTableSize = (char*)GetBitmapColorTableSize((int)logoBitmapData, 0);
     //    UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;

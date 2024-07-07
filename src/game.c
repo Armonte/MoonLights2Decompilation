@@ -99,7 +99,7 @@ int updateGameState1() {
     int result;
     int success;
 
-    for (i = 0; i < resourceArraySize; ++i) {
+    for (i = 0; i < (unsigned int)resourceArraySize; ++i) {
         for (currentObject = *((DWORD**)GlobalResourceArray + index); currentObject; currentObject = (DWORD*)*currentObject) {
             result = currentObject[1];
             if (result) {

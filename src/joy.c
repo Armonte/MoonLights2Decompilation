@@ -15,14 +15,14 @@ char inputBuffer2[256] = { 0 };
 
 static JoyInfo joystickInfo[2];
 static JoyInfo joystickInitInfo;
-static DWORD joystickFlag1 = 0;
+static HWND joystickFlag1 = 0;
 static DWORD joystickFlag2 = 0;
 static DWORD activeJoystickCount = 0;
-static DWORD joystickWindowHandle = 0;
-static JOYCAPS joyCaps;
-static WNDCLASSEX joystickWndClass;
-static const char* joystickWindowClassName = "JoystickWindowClass";
+static HWND joystickWindowHandle = 0;
+static JOYCAPSA joyCaps;
 
+static WNDCLASSEX joystickWndClass;
+static const wchar_t joystickWindowClassName[] = L"JoystickWindowClass";  // Wide-character string
 // External joystick window procedure
 LRESULT CALLBACK JoystickWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -83,7 +83,7 @@ int ProcessJoysticks(HWND hWndParent)
                 JOYINFOEX joyInfoEx;
                 memset(&joyInfoEx, 0, sizeof(joyInfoEx));
 
-                if (joyGetPosEx(joystickID, &joyInfoEx))
+                if (joyGetPosEx((UINT)joystickID, &joyInfoEx))
                     break;
             }
             else
@@ -91,7 +91,7 @@ int ProcessJoysticks(HWND hWndParent)
                 JOYINFO joyInfo;
                 memset(&joyInfo, 0, sizeof(joyInfo));
 
-                if (joyGetPos(joystickID, &joyInfo))
+                if (joyGetPos((UINT)joystickID, &joyInfo))
                     break;
             }
             ++joystickIndex;
@@ -104,7 +104,7 @@ int ProcessJoysticks(HWND hWndParent)
         InitJoystickWindow(hWndParent);
         if (!joystickWindowHandle)
             return 0;
-        joystickFlag1 = (DWORD)hWndParent;
+        joystickFlag1 = (HWND)hWndParent;
     }
     return joystickIndex;
 }

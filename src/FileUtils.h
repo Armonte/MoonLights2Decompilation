@@ -27,7 +27,7 @@ int __cdecl DecompressData(
     int decompressLength);
 
 void* __cdecl PerformSpecialDataProcessing(
-    int sourceParam,
+    unsigned __int8* sourceParam,
     int operationType,
     int decompressionParam,
     size_t outputStart,
@@ -54,7 +54,7 @@ void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset,
 
 void* __stdcall ReadPortionOfFile(LPCSTR lpFileName, unsigned int lDistanceToMove, DWORD nNumberOfBytesToRead, DWORD* lpNumberOfBytesRead);
 
-void* PerformSpecialDataProcessing(int sourceParam, int operationType, int decompressionParam, size_t outputStart, size_t totalDataSize, size_t Size, size_t* processedSizeOutput);
+void* PerformSpecialDataProcessing(unsigned __int8* sourceParam, int operationType, int decompressionParam, size_t outputStart, size_t totalDataSize, size_t Size, size_t* processedSizeOutput);
 
 void ReadFromFile();
 
