@@ -16,7 +16,7 @@ BYTE g_inputBuffer1[256];
 BYTE g_inputBuffer2[256];
 BYTE g_previousKeyState[256];
 
-int updateKeyboardState(BYTE* outputBuffer)
+int updateKeyboardState(BYTE* keyboardStateOut)
 {
     if (!GetKeyboardState(g_keyState))
     {
@@ -48,9 +48,9 @@ int updateKeyboardState(BYTE* outputBuffer)
 
     memcpy(g_inputBuffer2, g_keyState, 256);
 
-    if (outputBuffer)
+    if (keyboardStateOut)
     {
-        memcpy(outputBuffer, g_keyState, 256);
+        memcpy(keyboardStateOut, g_keyState, 256);
     }
 
     return 0;

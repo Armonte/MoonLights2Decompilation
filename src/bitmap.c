@@ -18,7 +18,7 @@
 
 int g_resourceHandlerState = 0;
 LPDIRECTDRAW g_directDrawObject = NULL;
-HPALETTE g_globalPalette = NULL;
+HPALETTE g_globalPalette;
 PALETTEENTRY g_gamePaletteEntries[256];
 
 
@@ -45,6 +45,7 @@ extern int g_bitsBuffer = 0;
 
 const char* a256ColorBmpFil = "256 color BMP file (*.bmp)|*.bmp|";
 void* off_43F2DC = NULL;  // Initialize this to the correct value if known
+
 
 int FindAndLoadBitmap(HWND windowHandle, const char* filter, char* fullPath, HANDLE* fileHandle, const char* defaultExtension)
 {
@@ -142,11 +143,17 @@ WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* pale
         if ((width & 3) != 0)
         {
             width = width - (width & 3) + 4;
-            alignedBuffer = (char*)malloc(width * height);
-            if (alignedBuffer == NULL) {
+            if (width > 0 && height > 0 && (size_t)width <= SIZE_MAX / (size_t)height) {
+                alignedBuffer = (char*)malloc((size_t)width * (size_t)height);
+                if (alignedBuffer == NULL) {
+                    return NULL;
+                }
+                memset(alignedBuffer, 0, (size_t)width * (size_t)height);
+            }
+            else {
+                // Handle overflow case
                 return NULL;
             }
-            memset(alignedBuffer, 0, width * height);
             alignedDestination = alignedBuffer;
             if (height > 0)
             {
@@ -163,12 +170,19 @@ WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* pale
         }
         if (flipFlag == 1)
         {
-            tempBuffer = (char*)malloc(width * height);
-            if (tempBuffer == NULL) {
+            if (width > 0 && height > 0 && (size_t)width <= SIZE_MAX / (size_t)height) {
+                tempBuffer = (char*)malloc((size_t)width * (size_t)height);
+                if (tempBuffer == NULL) {
+                    free(alignedBuffer);
+                    return NULL;
+                }
+                memcpy(tempBuffer, currentSource, (size_t)width * (size_t)height);
+            }
+            else {
+                // Handle overflow case
                 free(alignedBuffer);
                 return NULL;
             }
-            memcpy(tempBuffer, currentSource, width * height);
             if (flipImageVertically(tempBuffer, width, height)) {
                 goto CLEANUP;
             }
@@ -538,18 +552,28 @@ HPALETTE CreateCustomPalette(intptr_t colorTableSize, int numEntries)
 
 
 BYTE* __cdecl ProcessBitmapData(
-    void* bitmapHandle,
+    const char* filename,
     HBITMAP* outBitmap,
     DWORD* outColorCount,
     int* outWidth,
     int* outHeight)
 {
+    void* bitmapHandle; // Simulated bitmap handle
     BYTE* buffer; // edi
     BYTE* pixelPtr; // ecx
     int index; // edx
     HBITMAP newBitmap; // eax
     int imgHeight; // [esp+Ch] [ebp-8h] BYREF
     int imgWidth; // [esp+10h] [ebp-4h] BYREF
+
+    // Simulate bitmap handle initialization
+    bitmapHandle = malloc(100); // Example size, adjust as needed
+    if (!bitmapHandle)
+        return 0;
+
+    // Simulate setting some values in the bitmap handle
+    ((int*)((char*)bitmapHandle + 46))[0] = 0; 
+    ((int*)((char*)bitmapHandle + 28))[0] = 8;
 
     if (!bitmapHandle)
         return 0;
@@ -587,7 +611,6 @@ BYTE* __cdecl ProcessBitmapData(
     else
         return 0;
 }
-
 int __cdecl flipBitmapVertically(void* bitmapHandle) {
     void* bufferDetails; // edi
     unsigned int adjustedWidth; // eax
@@ -622,7 +645,6 @@ HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
     if (!bitmapHandle)
         return 0;
 
-    // Correct the cast to pass a pointer type
     colorTableSize = GetBitmapColorTableSize((void*)(uintptr_t)bitmapHandle, &numEntries);
     if (colorTableSize && numEntries)
         return CreateCustomPalette(colorTableSize, numEntries);
@@ -630,114 +652,64 @@ HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
         return 0;
 }
 
+
 int __cdecl GetBitmapColorTableSize(void* bitmapHandle, int* numEntries) {
     if (numEntries) {
         *numEntries = 0;
     }
 
     if (!bitmapHandle) {
-        // Invalid bitmap handle
         printf("GetBitmapColorTableSize: Invalid bitmap handle (NULL).\n");
         return 0;
     }
 
-    __try {
-        int colorTableSize = *(int*)((char*)bitmapHandle + 46);
-
-        printf("GetBitmapColorTableSize: Initial colorTableSize = %d\n", colorTableSize);
-
-        if (colorTableSize == 0) {
-            int bitsPerPixel = *(int*)((char*)bitmapHandle + 28);
-
-            printf("GetBitmapColorTableSize: bitsPerPixel = %d\n", bitsPerPixel);
-
-            switch (bitsPerPixel) {
-            case 1:
-                colorTableSize = 2;
-                break;
-            case 4:
-                colorTableSize = 16;
-                break;
-            case 8:
-                colorTableSize = 256;
-                break;
-            default:
-                colorTableSize = 0;
-                break;
-            }
-
-            if (colorTableSize == 0) {
-                return 0;
-            }
-        }
-
-        char* colorTableOffsetPtr = (char*)bitmapHandle + 54;
-        intptr_t colorTableOffset = (intptr_t)colorTableOffsetPtr;
-
-        // Additional check to ensure we don't return an invalid offset
-        if (colorTableOffset < 0) {
-            colorTableSize = 0;
-        }
-
-        if (numEntries) {
-            *numEntries = colorTableSize;
-        }
-
-        printf("GetBitmapColorTableSize: colorTableSize = %d, colorTableOffset = %zd\n", colorTableSize, colorTableOffset);
-
-        return (int)colorTableOffset;
-    }
-    __except (EXCEPTION_EXECUTE_HANDLER) {
-        // Handle the access violation
-        printf("GetBitmapColorTableSize: Exception occurred while accessing memory at bitmapHandle.\n");
+    if ((uintptr_t)bitmapHandle + 46 < (uintptr_t)bitmapHandle || (uintptr_t)bitmapHandle + 28 < (uintptr_t)bitmapHandle) {
+        printf("GetBitmapColorTableSize: Potential overflow detected.\n");
         return 0;
     }
-}
 
-char* createGraphicsBuffer(int x, int y, int width, int height)
-{
-    if (isGraphicsInitialized())
-    {
-        return NULL;
-    }
+    int colorTableSize = *(int*)((char*)bitmapHandle + 46);
+    printf("GetBitmapColorTableSize: Initial colorTableSize = %d\n", colorTableSize);
 
-    if (isRectangleWithinScreen(x, y, width, height))
-    {
-        return NULL;
-    }
+    if (colorTableSize == 0) {
+        int bitsPerPixel = *(int*)((char*)bitmapHandle + 28);
+        printf("GetBitmapColorTableSize: bitsPerPixel = %d\n", bitsPerPixel);
 
-    char* buffer = (char*)malloc(width * height);
-    if (!buffer)
-    {
-        return NULL;
-    }
-
-    memset(buffer, 0, width * height);
-
-    for (int currentY = y; currentY < y + height; currentY++)
-    {
-        if (currentY < 0 || currentY >= g_maxScreenHeight)
-        {
-            continue;
+        switch (bitsPerPixel) {
+        case 1:
+            colorTableSize = 2;
+            break;
+        case 4:
+            colorTableSize = 16;
+            break;
+        case 8:
+            colorTableSize = 256;
+            break;
+        default:
+            colorTableSize = 0;
+            break;
         }
 
-        char* screenRow = (char*)(uintptr_t)g_bitDepth + g_maxScreenWidth * currentY; // Proper casting
-        char* bufferRow = buffer + (currentY - y) * width;
-
-        int startX = (x < 0) ? -x : 0;
-        int endX = (x + width > g_maxScreenWidth) ? (g_maxScreenWidth - x) : width;
-
-        if (endX <= 0)
-        {
-            continue;
+        if (colorTableSize == 0) {
+            return 0;
         }
-
-        memcpy(bufferRow + startX, screenRow + x + startX, endX - startX);
     }
 
-    return buffer;
-}
+    char* colorTableOffsetPtr = (char*)bitmapHandle + 54;
+    intptr_t colorTableOffset = (intptr_t)colorTableOffsetPtr;
 
+    if (colorTableOffset < 0) {
+        colorTableSize = 0;
+    }
+
+    if (numEntries) {
+        *numEntries = colorTableSize;
+    }
+
+    printf("GetBitmapColorTableSize: colorTableSize = %d, colorTableOffset = %zd\n", colorTableSize, colorTableOffset);
+
+    return (int)colorTableOffset;
+}
 int isGraphicsInitialized(void)
 {
     if (g_maxScreenWidth && g_maxScreenHeight && g_bitDepth &&
@@ -812,4 +784,48 @@ int __cdecl UpdatePaletteEntries(int startIndex, UINT entryCount, char* colorDat
     AnimatePalette(g_globalPalette, startIndex, entriesToUpdate, tempPalette);
     free(tempPalette);
     return -(g_globalPalette == 0);
+}
+
+char* createGraphicsBuffer(int x, int y, int width, int height)
+{
+    if (isGraphicsInitialized())
+    {
+        return NULL;
+    }
+
+    if (isRectangleWithinScreen(x, y, width, height))
+    {
+        return NULL;
+    }
+
+    char* buffer = (char*)malloc(width * height);
+    if (!buffer)
+    {
+        return NULL;
+    }
+
+    memset(buffer, 0, width * height);
+
+    for (int currentY = y; currentY < y + height; currentY++)
+    {
+        if (currentY < 0 || currentY >= g_maxScreenHeight)
+        {
+            continue;
+        }
+
+        char* screenRow = (char*)(uintptr_t)g_bitDepth + g_maxScreenWidth * currentY; // Proper casting
+        char* bufferRow = buffer + (currentY - y) * width;
+
+        int startX = (x < 0) ? -x : 0;
+        int endX = (x + width > g_maxScreenWidth) ? (g_maxScreenWidth - x) : width;
+
+        if (endX <= 0)
+        {
+            continue;
+        }
+
+        memcpy(bufferRow + startX, screenRow + x + startX, endX - startX);
+    }
+
+    return buffer;
 }

@@ -26,6 +26,34 @@ void* dword_4C0790 = NULL;
 int dword_4C07C0 = 0;
 int dword_4C07C4 = 0;
 
+
+int dword_4C07B8;
+int dword_4C07B4;
+int dword_4C07BC;
+
+int __cdecl InitAnimParams(int frameCount, char isReverse, int totalFrames)
+{
+    if (!g_bitDepth || totalFrames < 2)
+        return -1;
+    dword_4C07B8 = frameCount;
+    dword_4C07C0 = totalFrames - 1;
+    dword_4C07B4 = 1;
+    dword_4C07C4 = 0;
+    dword_4C07BC = isReverse & 1;
+    UpdateAnimationState(2);
+    if (dword_4C07BC)
+        dword_4C07C4 = dword_4C07C0;
+    else
+        dword_4C07C4 = 1;
+    return 0;
+}
+
+int InitAnimations()
+{
+    InitAnimParams(0, 1, 10);
+    return 0;
+}
+
 int UpdateAnimationState(int pixelSize)
 {
     int totalArea; // total area of the pixel size
@@ -287,15 +315,26 @@ int initializeAnimationParameters(int frameCount, bool isReverse, int totalFrame
     return 0;  // Success
 }
 
-void* InitAnimationControl(HWND hwnd, int width, int height, int bitDepth) {
+void* __cdecl InitAnimationControl(HWND hwnd, int width, int height, int bitDepth) {
     if (!hwnd || width <= 0 || height <= 0 || bitDepth <= 0) {
         return NULL;
     }
 
     g_animationWindow = hwnd;
 
-    size_t bytesPerRow = (width * bitDepth / 8 + ((((width * bitDepth) >> 31) ^ abs(width * bitDepth) & 7) != (width * bitDepth) >> 31));
-    size_t bufferSize = height * bytesPerRow;
+    // Calculate bytesPerRow safely
+    size_t bytesPerRow;
+    if (width > (SIZE_MAX - 7) / bitDepth) {
+        return NULL; // width * bitDepth would overflow
+    }
+    bytesPerRow = ((size_t)width * (size_t)bitDepth + 7) / 8;
+
+    // Calculate bufferSize safely
+    size_t bufferSize;
+    if (height > SIZE_MAX / bytesPerRow) {
+        return NULL; // height * bytesPerRow would overflow
+    }
+    bufferSize = (size_t)height * bytesPerRow;
 
     void* localBuffer = malloc(bufferSize);
     if (!localBuffer) {
@@ -404,8 +443,7 @@ int fillRectangleWithColor(unsigned char color, int startX, int startY, unsigned
     return 0;
 }
 
-int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int startX, int startY,
-    int width, int height, int useDirectMemoryAccess) {
+int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int startX, int startY, int width, int height, int useDirectMemoryAccess) {
     char* renderSourceBuffer;
     char* destinationPtr;
     char* sourcePtr;
@@ -429,20 +467,24 @@ int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int star
     int currentY_1;
     char* temporaryRow = NULL;
 
-    if (isGraphicsSystemInitialized())
+    if (isGraphicsSystemInitialized()) {
         return -1;
-    if (isRectangleWithinScreen(startX, startY, width, height))
+    }
+    if (isRectangleWithinScreen(startX, startY, width, height)) {
         return -1;
-    if (!sourceBuffer)
+    }
+    if (!sourceBuffer) {
         return -1;
+    }
 
     renderSourceBuffer = sourceBuffer;
     if (renderMode) {
-        renderSourceBuffer = (char*)g_bitsBuffer;  // Ensure g_bitsBuffer is cast to char*
-        if (width * height > (intptr_t)dword_4C0790) {
-            temporaryRow = (char*)malloc(width * height);
-            if (!temporaryRow)
+        renderSourceBuffer = (char*)g_bitsBuffer;
+        if ((size_t)width > SIZE_MAX / (size_t)height || (size_t)(width * height) > (size_t)dword_4C0790) {
+            temporaryRow = (char*)malloc((size_t)width * (size_t)height);
+            if (!temporaryRow) {
                 return -1;
+            }
             renderSourceBuffer = temporaryRow;
         }
         destinationPtr = renderSourceBuffer;
@@ -502,36 +544,49 @@ int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int star
     if (useDirectMemoryAccess) {
         if (currentY_1 > startY) {
             do {
-                if (endYCoordinate < 0)
+                if (endYCoordinate < 0) {
                     goto LABEL_68;
-                if (endYCoordinate >= g_maxScreenHeight)
+                }
+                if (endYCoordinate >= g_maxScreenHeight) {
                     break;
-                screenPtrStart = (unsigned char*)((intptr_t)g_bitDepth + g_maxScreenWidth * endYCoordinate);  // Cast g_bitDepth to appropriate type
+                }
+                if (g_maxScreenWidth > 0 && endYCoordinate > 0 && (unsigned int)endYCoordinate <= SIZE_MAX / (unsigned int)g_maxScreenWidth) {
+                    screenPtrStart = (unsigned char*)((intptr_t)g_bitDepth + (size_t)g_maxScreenWidth * (size_t)endYCoordinate); // Cast g_bitDepth to appropriate type
+                }
+                else {
+                    // Handle the overflow case, possibly by returning an error or handling it appropriately
+                    return -1;
+                }
                 isStartXNegative = startX < 0;
                 if (startX > 0) {
-                    if (startX < g_maxScreenWidth)
+                    if (startX < g_maxScreenWidth) {
                         screenPtrStart += startX;
+                    }
                     isStartXNegative = startX < 0;
                 }
                 if (isStartXNegative) {
-                    copyWidth = startX + width;
-                    if (startX + width <= 0)
+                    copyWidth = (unsigned int)(startX)+(unsigned int)width;
+                    if ((int)(startX + width) <= 0) {
                         break;
+                    }
                 }
                 else {
-                    copyWidth = width;
-                    if ((unsigned int)(startX)+(unsigned int)(width) >= (unsigned int)(g_maxScreenWidth))  // Cast both startX and g_maxScreenWidth to unsigned
+                    copyWidth = (unsigned int)width;
+                    if ((unsigned int)(startX)+(unsigned int)width >= (unsigned int)g_maxScreenWidth) { // Cast both startX and g_maxScreenWidth to unsigned
                         copyWidth = (unsigned int)(g_maxScreenWidth)-(unsigned int)(startX);
+                    }
                 }
-                if (startX < 0)
+                if (startX < 0) {
                     renderSourceBuffer -= startX;
+                }
                 memcpy(screenPtrStart, renderSourceBuffer, copyWidth);
                 if (startX >= 0) {
                 LABEL_68:
                     renderSourceBuffer += width;
                 }
-                else
+                else {
                     renderSourceBuffer += startX + width;
+                }
                 ++endYCoordinate;
             } while (currentY_1 > endYCoordinate);
         }
@@ -542,11 +597,19 @@ int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int star
                 renderSourceBuffer += width;
                 goto SKIP_LABEL;
             }
-            if (endYCoordinate >= g_maxScreenHeight)
+            if (endYCoordinate >= g_maxScreenHeight) {
                 break;
-            screenPtr = (unsigned char*)((intptr_t)g_bitDepth + g_maxScreenWidth * endYCoordinate);  // Cast g_bitDepth to appropriate type
-            if (startX > 0 && startX < g_maxScreenWidth)
+            }
+            if (g_maxScreenWidth > 0 && endYCoordinate > 0 && (size_t)endYCoordinate <= SIZE_MAX / (size_t)g_maxScreenWidth) {
+                screenPtr = (unsigned char*)((intptr_t)g_bitDepth + (size_t)g_maxScreenWidth * (size_t)endYCoordinate); // Cast g_bitDepth to appropriate type
+            }
+            else {
+                // Handle the overflow case, possibly by returning an error or handling it appropriately
+                return -1;
+            }
+            if (startX > 0 && startX < g_maxScreenWidth) {
                 screenPtr += startX;
+            }
             for (i = startX; i < startX + width; ++renderSourceBuffer) {
                 if (i >= 0) {
                     if (*renderSourceBuffer) {
@@ -565,11 +628,11 @@ int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int star
         } while (currentY_1 > endYCoordinate);
     }
 
-    if (temporaryRow)
+    if (temporaryRow) {
         free(temporaryRow);
+    }
     return 0;
 }
-
 int renderPixelAreaWrapper(int32_t* params) {
     if (params == NULL) {
         return -1;  // Error: Invalid input

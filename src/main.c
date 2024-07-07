@@ -96,12 +96,18 @@ void lollmao() {
 
     lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
         (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
-    StringCchPrintf((LPTSTR)lpDisplayBuf,
+    StringCchPrintf((LPTSTR)lpDisplayBuf, // Cast to LPTSTR
         LocalSize(lpDisplayBuf) / sizeof(TCHAR),
         TEXT("%s lol. lmao. failed with error %d: %s"),
-        lpszFunction, dw, lpMsgBuf);
+        lpszFunction, dw, (LPTSTR)lpMsgBuf); // Cast lpMsgBuf to LPTSTR
+
     MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
+
+    LocalFree(lpMsgBuf);
+    LocalFree(lpDisplayBuf);
 }
+
+
 
 // yes this should be normal winmain but shift-JIS is a curse upon this land
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
@@ -109,6 +115,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
  /*   int iVar1;
     int* IVar2;
     int* puVar3;*/
+
 
     InitCommonControls();
     if (UseActiveWindow(ML2) == -1) {
@@ -229,6 +236,7 @@ HWND CreateMainWindow(window_t type, HINSTANCE hInstance, int nCmdShow) {
                 MessageBox(hwnd, (LPCWSTR)BITDEPTH_ERROR_EN, ML2VER, 0);
                 return (HWND)0x0;
             }
+
             ShowWindow(hwnd, nCmdShow);
             UpdateWindow(hwnd);
             return hwnd;

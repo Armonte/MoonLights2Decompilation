@@ -1,20 +1,50 @@
+// Standard includes
 #include <stdbool.h>
+
+// Windows includes
 #include <windows.h>
+
+// Project-specific includes
 #include "game.h"
 #include "anim.h"
 #include "ResourceUtils.h"
 #include "KeyboardManager.h"
 #include "reg.h"
 
+// Constants
 #define RENDER_DATA_SIZE 44 // Size of each render data entry in bytes
-extern int gamestateVariable_Unk;
-extern int dword_4C0774; // Maximum number of render objects
 
+// External function declarations
 extern void cleanupResources(void);
 extern void setVolume(int volume);
 extern HPALETTE createDefaultPalette(void);
 
+// External variable declarations
+extern int g_maxScreenWidth;
+extern int g_maxScreenHeight;
+extern int g_bitDepth;
+extern int g_timerCurrentValue;
+extern int globalTimerValue;
+extern int dword_4C0774; // Maximum number of render objects
+
 // Global variables
+int gamestateVariable_Unk = 0;
+int g_gameStateVariable = 0;
+int g_currentResourceSize2 = 0;
+int g_isFullscreenReg = 0;
+int g_isMouseActive = 0;
+int g_isAudioEnabled = 0;
+int nBitCount = 32; // Example value, adjust as necessary
+
+HWND mainWindowHandle = NULL;
+HDC g_hdc = NULL;
+
+BYTE g_keyboardStateData[256];
+
+DWORD g_tickIncrementTable[] = { 16, 32, 48, 64 }; // Example values, adjust as necessary
+int g_currentTickIncrementIndex = 0;
+
+// Static variables
 static DWORD g_frameTickCount = 0;
 static BOOL g_isGamePaused = FALSE;
 static DWORD g_gameMaxTickCount = 0;
@@ -26,35 +56,84 @@ static HDC g_deviceContext = NULL;
 static HWND g_parentWindow = NULL;
 static DWORD g_lastActionTickTime = 0;
 static int g_globalTimerValue = 0;
-BYTE g_keyboardStateData[256];
-
-int gamestateVariable_Unk = 0;
-int g_gameStateVariable = 0;
-int g_currentResourceSize2 = 0;
-
-extern HWND mainWindowHandle; // This replaces dword_4C0794
-extern int g_maxScreenWidth;
-extern int g_maxScreenHeight;
-extern int nBitCount;
-extern int g_bitDepth;
 static int g_currentRenderObjectCount = 0;
 static int g_maxRenderObjects = 0;
 static int32_t* g_renderDataArray = NULL;
 
 
-extern int g_timerCurrentValue;
-extern int globalTimerValue;
+int FrameTickCount_0;
+int IsGamePaused;
+int GameMaxTickCount;
+int FrameMaxTickCount;
+int dword_4C1A80;
+int dword_4C1A84;
+int SUPERFLASH_GRAD_BMP_FLAG;
+HDC hdc;
+HWND hWndParent;
+BYTE byte_43F1EC[256]; // Assuming size, replace with actual size
+DWORD LastActionTickTime;
+//KEYBOARD_STATE keyboardStateData;
 
-int g_isFullscreenReg = 0;
-HDC g_hdc = NULL;
-int g_isMouseActive = 0;
-int g_isAudioEnabled = 0;
-DWORD g_tickIncrementTable[] = { 16, 32, 48, 64 }; // Example values, adjust as necessary
-int g_currentTickIncrementIndex = 0;
-HWND mainWindowHandle = NULL;
-int nBitCount = 32; // Example value, adjust as necessary
+int ResourceHandlerState;
+void* bufferPointer;
+BYTE colorTable1[40];
+BYTE colorTable2[984];
+LPDIRECTDRAW lpDD;
+void* graphicsInterface;
+
+int UpdateColorInformation()
+{
+    LPDIRECTDRAWPALETTE paletteHandle; // Change the type to match the usage
+
+    if (ResourceHandlerState == 3)
+    {
+        bufferPointer = getPaletteEntry();
+        memcpy(&colorTable1, bufferPointer, 0x28u);
+        memcpy(&colorTable2, bufferPointer, 0x3D8u);
+        if (lpDD->lpVtbl->CreatePalette(lpDD, 4, (PALETTEENTRY*)&colorTable1, &paletteHandle, NULL))
+            return -1;
+        (*(void (*)(void*, LPDIRECTDRAWPALETTE))(*(intptr_t*)graphicsInterface + 124))(graphicsInterface, paletteHandle);
+        (*(void (*)(LPDIRECTDRAWPALETTE))(*(intptr_t*)paletteHandle + 8))(paletteHandle);
+    }
+    return 0;
+}
 
 
+
+DWORD setupGameEnvironment()
+{
+  //  void* fontHandle; // eax
+    HPALETTE defaultPalette; // eax
+    DWORD result; // eax
+
+    FrameTickCount_0 = 0;
+    IsGamePaused = 0;
+    GameMaxTickCount = 0;
+    FrameMaxTickCount = 0;
+    dword_4C1A80 = 0;
+    dword_4C1A84 = 0;
+    SUPERFLASH_GRAD_BMP_FLAG = 0;
+    clearGlobalAnimationControl();
+    cleanupResources();
+    ResetJoystickInfo();
+  //  updateKeyboardState(&keyboardStateData);
+    setVolume(g_globalTimerValue);
+
+    if (!hdc)
+    {
+        hdc = GetDC(hWndParent);
+   //     fontHandle = CreateCustomFont(hdc, byte_43F1EC, 12, 6);
+//        SelectObject(hdc, fontHandle);
+        defaultPalette = createDefaultPalette();
+        SelectPalette(hdc, defaultPalette, 0);
+        RealizePalette(hdc);
+    }
+
+    UpdateColorInformation();
+    result = GetTickCount();
+    LastActionTickTime = result;
+    return result;
+}
 
 extern int isGraphicsSystemInitialized();
 
@@ -324,37 +403,6 @@ HFONT CreateCustomFont(HDC deviceContext, const char* fontName, int height, int 
     return createdFont;
 }
 
-DWORD setupGameEnvironment(void)
-{
-    g_frameTickCount = 0;
-    g_isGamePaused = FALSE;
-    g_gameMaxTickCount = 0;
-    g_frameMaxTickCount = 0;
-    g_unknownVar1 = 0;
-    g_unknownVar2 = 0;
-    g_superflashGradBmpFlag = FALSE;
-
-    clearGlobalAnimationControl();
-    cleanupResources();
-    ResetJoystickInfo();
-    updateKeyboardState(g_keyboardStateData);
-    setVolume(g_globalTimerValue);
-
-    if (!g_deviceContext)
-    {
-        g_deviceContext = GetDC(g_parentWindow);
-        void* customFont = CreateCustomFont(g_deviceContext, "Arial", 12, 6);  // Assuming "Arial" as font name
-        SelectObject(g_deviceContext, customFont);
-        HPALETTE defaultPalette = createDefaultPalette();
-        SelectPalette(g_deviceContext, defaultPalette, FALSE);
-        RealizePalette(g_deviceContext);
-    }
-
-    updateColorInformation();
-
-    g_lastActionTickTime = GetTickCount();
-    return g_lastActionTickTime;
-}
 
 int updateRenderingData(uint32_t imageId, int renderFlag, int xOffset, int yOffset,
     int xPos, int yPos, int width, int height, int renderType)

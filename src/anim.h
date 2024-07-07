@@ -47,6 +47,6 @@ int renderPixelAreaWrapper(int* params);
 int renderPixelArea(char* sourceBuffer, char baseColor, int renderMode, int startX, int startY,
     int width, int height, int useDirectMemoryAccess);
 
-
-
+int __cdecl InitAnimParams(int frameCount, char isReverse, int totalFrames);
+int InitAnimations();
 #endif // ANIM_H

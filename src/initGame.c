@@ -126,6 +126,8 @@ void audioReset(void);
 int mmBgScroll(void);
 //void sub_41F290(void); stubbed
 int mmCssTeamBattle(void);
+DWORD setupGameEnvironment();
+
 
 void* tmpPtr;
 
@@ -270,10 +272,10 @@ int initGame() {
         return 0;
     processedPixelCount = 0;
     initAndRunGame();
-    //title_bmp_data = 0;
-    //psel_bmp_data = 0;
-    //tokyo_bmp_data_pointer = 0;
-    uint8_t* title_bmp_data = (uint8_t*)ProcessBitmapData("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+    title_bmp_data = 0;
+    psel_bmp_data = 0;
+    tokyo_bmp_data_pointer = 0;
+    void* title_bmp_data = ProcessBitmapData("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
     if (title_bmp_data) {
         ProcessBitmapData(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
         uint8_t* psel_bmp_data = (uint8_t*)ProcessBitmapData("psel.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
@@ -601,14 +603,12 @@ void initAndRunGame()
         bitmapDataOffset = (BYTE*)ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
         int colorTableSize = GetBitmapColorTableSize(logoBitmapData, 0); // Proper casting
         BitmapColorTableSize = (char*)(uintptr_t)colorTableSize; // Proper casting to char*
-
         UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;
-
-        // InitAnimations();
+        InitAnimations();
         frameCounter = 0;
-        // setupGameEnvironment();
+        setupGameEnvironment();
         do
         {
             if (frameCounter > 10 && (HandleP1Inputs() || HandleP2Inputs()))
@@ -625,7 +625,7 @@ void initAndRunGame()
                 originalHeight,
                 1);
             mainGameLoop();
-            // ClearGlobalAnimControl();
+            clearGlobalAnimationControl();
         } while (frameCounter < 240);
         // g_UpdateObject();
         free(logoBitmapData);

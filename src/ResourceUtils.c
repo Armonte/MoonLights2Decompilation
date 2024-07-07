@@ -128,8 +128,14 @@ int processScreenUpdatesAndResources() {
 
     horizontalResourceOffset = *g_screenPosHorizontal;  // Assuming g_screenPosHorizontal is an int pointer
     remainingRows = 256;
-    destinationBuffer = (char*)((uintptr_t)screenUpdateData[9] + screenOffset.x + screenUpdateData[4] * screenOffset.y);
-
+    if (screenUpdateData[4] > 0 && screenOffset.y >= 0 && (uintptr_t)screenOffset.y <= SIZE_MAX / (uintptr_t)screenUpdateData[4] &&
+        screenOffset.x >= 0 && (uintptr_t)screenOffset.x <= SIZE_MAX - (uintptr_t)screenUpdateData[9]) {
+        destinationBuffer = (char*)((uintptr_t)screenUpdateData[9] + (uintptr_t)screenOffset.x + (uintptr_t)screenUpdateData[4] * (uintptr_t)screenOffset.y);
+    }
+    else {
+        // Handle the overflow case, possibly by returning an error or handling it appropriately
+        return -1;
+    }
     do {
         sourceBuffer = (const void*)(uintptr_t)horizontalResourceOffset;
         horizontalResourceOffset += 256;
