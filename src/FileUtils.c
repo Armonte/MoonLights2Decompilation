@@ -128,14 +128,26 @@ void* __cdecl PerformSpecialDataProcessing(
     if (!allocatedMemAddr)
         return 0;
 
+    // Check if totalDataSize can be safely cast to unsigned int
+    if (totalDataSize > UINT_MAX) {
+        free(v10);
+        return 0;
+    }
+
+    // Check if v8 can be safely cast to int
+    if (v8 > INT_MAX) {
+        free(v10);
+        return 0;
+    }
+
     if (HandleDataProcessing(
-        (unsigned __int8*)sourceParam,
+        sourceParam,
         operationType,
         decompressionParam,
         outputStart,
         allocatedMemAddr,
-        totalDataSize,
-        v8))
+        (unsigned int)totalDataSize, // Cast with safety check
+        (int)v8)) // Cast with safety check
     {
         if (processedSizeOutput)
             *processedSizeOutput = v8;
@@ -183,7 +195,7 @@ void convertToUppercaseShiftJIS(unsigned char* inputString)
     }
 }
 
-void _splitpath(const char* pathInput, char* driveOutput, char* directoryOutput, char* filenameOutput, char* extensionOutput)
+void split_path(const char* pathInput, char* driveOutput, char* directoryOutput, char* filenameOutput, char* extensionOutput)
 {
     const char* pathCursor = pathInput;
     const char* lastSlashPosition = NULL;
@@ -338,11 +350,11 @@ void __cdecl createFullPath(
     char* currentBufferPosition; // esi
     const unsigned __int8* dirCursor; // ecx
     char dirCharacter; // dl
-    unsigned int lastDirCharacter; // Corrected type
+    const unsigned char* lastDirCharacter; // Corrected type
     const char* filenameCursor; // eax
     char filenameCharacter; // cl
     char fileExtensionCharacter; // cl
-    byte* extensionStart; // eax
+    char* extensionStart; // eax
     char* extensionBufferPosition; // esi
     const char* extensionCursor; // edx
     char extensionCharacter; // cl
@@ -371,7 +383,7 @@ void __cdecl createFullPath(
             *currentBufferPosition++ = dirCharacter;
         } while (*dirCursor);
         lastDirCharacter = _mbsdec((const unsigned char*)directory, dirCursor);
-        if (lastDirCharacter != 47 && lastDirCharacter != 92)
+        if (lastDirCharacter != (const unsigned char*)47 && lastDirCharacter != (const unsigned char*)92)
             *currentBufferPosition++ = 92;
     }
     filenameCursor = filename;
@@ -388,7 +400,7 @@ void __cdecl createFullPath(
         if (*fileExtension && *fileExtension != 46)
             *currentBufferPosition++ = 46;
         fileExtensionCharacter = *fileExtension;
-        extensionStart = (byte*)currentBufferPosition;
+        extensionStart = currentBufferPosition;
         extensionBufferPosition = currentBufferPosition + 1;
         extensionCursor = fileExtension + 1;
         *extensionStart = *fileExtension;
@@ -475,7 +487,7 @@ cleanup:
     return returnBytesRead;
 }
 
-int __cdecl CustomDataCopy(LPCSTR fileName, int dataPointer)
+int __cdecl CustomDataCopy(LPCSTR fileName, void* dataPointer)
 {
     char buffer[32]; // Temporary buffer for file data
 
@@ -483,7 +495,7 @@ int __cdecl CustomDataCopy(LPCSTR fileName, int dataPointer)
         return -1;
     if (!CustomFileOperation(fileName, buffer, 0, 32))
         return -1;
-    dataStructurePtr = dataPointer;
+    dataStructurePtr = (int*)dataPointer;
     memcpy(unk_67A1A8, buffer, 32);
     strcpy_s(LIGHTS2_NCD, MAX_PATH_LENGTH, fileName);
     return 0;
@@ -499,7 +511,7 @@ int __cdecl HandleDataProcessing(
     int length)
 {
     int processedLength;
-    unsigned int availableDataSize;
+    size_t availableDataSize;
     char* tempBuffer;
 
     if (!sourceData || !destination) {
@@ -511,18 +523,28 @@ int __cdecl HandleDataProcessing(
     }
 
     availableDataSize = length;
-    if (length + offset > dataSize) {
+    if ((size_t)(length + offset) > dataSize) {
         availableDataSize = dataSize - offset;
+    }
+
+    if (availableDataSize > INT_MAX) {
+        // Handle overflow case
+        return 0;
     }
 
     if (dataType) {
         if (dataType == 2) {
             tempBuffer = malloc(dataSize);
             if (tempBuffer) {
-                DecompressData(decompressionType, sourceData, tempBuffer, 0, dataSize);
+                if (dataSize > INT_MAX) {
+                    // Handle overflow case
+                    free(tempBuffer);
+                    return 0;
+                }
+                DecompressData(decompressionType, sourceData, tempBuffer, 0, (int)dataSize); // Ensure casting to int
                 memcpy(destination, &tempBuffer[offset], availableDataSize);
                 free(tempBuffer);
-                return availableDataSize;
+                return (int)availableDataSize; // Ensure casting to int
             }
             else {
                 return 0;
@@ -533,7 +555,7 @@ int __cdecl HandleDataProcessing(
         }
     }
     else {
-        processedLength = availableDataSize;
+        processedLength = (int)availableDataSize; // Ensure casting to int
         memcpy(destination, &sourceData[offset], availableDataSize);
     }
 
@@ -559,7 +581,7 @@ void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset,
 
     if (*dataStructure != -1) {
         while (dataStructure[1] != -1 && dataStructure[2] != -1 && dataStructure[3] != -1) {
-            if (strcmp(upperCaseFileName, (const char*)dataStructure[4]) == 0) {
+            if (strcmp(upperCaseFileName, (const char*)(uintptr_t)dataStructure[4]) == 0) { // Proper casting
                 if ((unsigned int)dataStructure[3] < fileOffset)
                     return NULL;
 
@@ -568,7 +590,7 @@ void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset,
                     return NULL;
 
                 result = PerformSpecialDataProcessing(
-                    (int)portionOfFile,
+                    (unsigned __int8*)portionOfFile,
                     dataStructure[1],
                     dataStructure[2],
                     fileOffset,
@@ -586,6 +608,7 @@ void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset,
     }
     return NULL;
 }
+
 void* __stdcall ReadPortionOfFile(
     LPCSTR lpFileName,
     unsigned int lDistanceToMove,

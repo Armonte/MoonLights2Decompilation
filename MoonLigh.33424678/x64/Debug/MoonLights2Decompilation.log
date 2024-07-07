@@ -1,56 +1,20 @@
 ﻿  anim.c
   audio.c
   bitmap.c
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(435,36): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(435,36): warning C4024: 'GetBitmapColorTableSize': different types for formal and actual parameter 1
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(557,61): warning C4244: 'function': conversion from 'uintptr_t' to 'int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(557,74): warning C4311: 'type cast': pointer truncation from 'HPALETTE' to 'DWORD'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(559,37): warning C4244: 'function': conversion from 'uintptr_t' to 'int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(560,96): warning C4312: 'type cast': conversion from 'int' to 'BYTE *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(598,63): warning C4312: 'type cast': conversion from 'int' to 'void *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(602,60): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(603,55): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(603,110): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(603,161): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(609,34): warning C4047: 'function': 'char *' differs in levels of indirection from 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(609,34): warning C4024: 'flipImageVertically': different types for formal and actual parameter 1
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(641,56): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(646,58): warning C4312: 'type cast': conversion from 'int' to 'int *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(694,9): warning C4013: 'isGraphicsInitialized' undefined; assuming extern returning int
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(719,15): warning C4047: 'initializing': 'char *' differs in levels of indirection from 'int'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(644,58): warning C4312: 'type cast': conversion from 'int' to 'char *' of greater size
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(649,60): warning C4312: 'type cast': conversion from 'int' to 'char *' of greater size
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(673,58): warning C4312: 'type cast': conversion from 'int' to 'char *' of greater size
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(673,63): warning C4311: 'type cast': pointer truncation from 'char *' to 'int'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(722,15): warning C4047: 'initializing': 'char *' differs in levels of indirection from 'int'
   FileUtils.c
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(137,9): warning C4267: 'function': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(138,9): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(186,6): warning C4273: '_splitpath': inconsistent dll linkage
-  C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0\ucrt\stdlib.h(1105,23):
-  see previous definition of '_splitpath'
-  
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(373,26): warning C4047: '=': 'unsigned int' differs in levels of indirection from 'unsigned char *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(486,22): warning C4047: '=': 'int *' differs in levels of indirection from 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(515,38): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(522,78): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(562,72): warning C4312: 'type cast': conversion from 'int' to 'const char *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(571,39): warning C4311: 'type cast': pointer truncation from 'void *' to 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(571,26): warning C4047: 'function': 'unsigned char *' differs in levels of indirection from 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\FileUtils.c(571,26): warning C4024: 'PerformSpecialDataProcessing': different types for formal and actual parameter 1
   game.c
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\game.c(103,124): warning C4312: 'type cast': conversion from 'DWORD' to 'DWORD *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\game.c(152,78): warning C4022: 'CreateBitmap': pointer mismatch for actual parameter 5
   initGame.c
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(252,50): warning C4311: 'type cast': pointer truncation from 'NcdFile [78]' to 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(322,44): warning C4047: '=': 'int' differs in levels of indirection from 'void *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(451,47): warning C4133: '=': incompatible types - from 'int *' to 'int16_t *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(488,48): warning C4133: '=': incompatible types - from 'int *' to 'int16_t *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(494,90): warning C4312: 'type cast': conversion from 'int' to 'int16_t *' of greater size
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(551,50): warning C4047: '=': 'int16_t **' differs in levels of indirection from 'int *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(557,59): warning C4133: '<': incompatible types - from 'uint8_t **' to 'int16_t **'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(220,9): warning C4101: 'pixelIndex': unreferenced local variable
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(218,14): warning C4101: 'toktoBitmapDataPtr': unreferenced local variable
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(599,72): warning C4311: 'type cast': pointer truncation from 'void *' to 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(599,58): warning C4022: 'ProcessBitmapData': pointer mismatch for actual parameter 1
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(599,26): warning C4047: '=': 'int' differs in levels of indirection from 'BYTE *'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(600,82): warning C4311: 'type cast': pointer truncation from 'void *' to 'int'
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(600,86): warning C4312: 'type cast': conversion from 'int' to 'char *' of greater size
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(455,47): warning C4133: '=': incompatible types - from 'int *' to 'int16_t *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(492,48): warning C4133: '=': incompatible types - from 'int *' to 'int16_t *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(498,90): warning C4312: 'type cast': conversion from 'int' to 'int16_t *' of greater size
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(555,50): warning C4047: '=': 'int16_t **' differs in levels of indirection from 'int *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(561,59): warning C4133: '<': incompatible types - from 'uint8_t **' to 'int16_t **'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(603,30): warning C4047: '=': 'char *' differs in levels of indirection from 'int'
   joy.c
   KeyboardManager.c
   main.c
@@ -59,5 +23,4 @@ C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\main.c(134,33): war
   ResourceUtils.c
   timers.c
   Generating Code...
-     Creating library C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\x64\Debug\MoonLights2Decompilation.lib and object C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\x64\Debug\MoonLights2Decompilation.exp
   MoonLights2Decompilation.vcxproj -> C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\x64\Debug\MoonLights2Decompilation.exe

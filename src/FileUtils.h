@@ -19,6 +19,18 @@ char LIGHTS2_NCD[MAX_PATH_LENGTH];
 extern int cbMultiByte;
 extern unsigned char* off_4C0858;
 
+// fileutils.h
+#ifdef _WIN32
+#ifdef BUILDING_DLL
+#define DLL_EXPORT __declspec(dllexport)
+#else
+#define DLL_EXPORT __declspec(dllimport)
+#endif
+#else
+#define DLL_EXPORT
+#endif
+
+#endif
 int __cdecl DecompressData(
     int inputSize,
     unsigned __int8* inputData,
@@ -68,7 +80,7 @@ int FindCDDrive();
 void convertToUppercaseShiftJIS(unsigned char* inputString);
 
 int BrowseAndSetFolderPath();
-//void _splitpath(const char* pathInput, char* driveOutput, char* directoryOutput, char* filenameOutput, char* extensionOutput);
+//void split_path(const char* pathInput, char* driveOutput, char* directoryOutput, char* filenameOutput, char* extensionOutput);
 int GetDriveIndex(unsigned char* inputChar);
 
 int CustomDirectoryProcessing(void);
@@ -93,7 +105,6 @@ DWORD __stdcall CustomFileOperation(
     unsigned int lDistanceToMove,
     DWORD nNumberOfBytesToRead);
 
-int __cdecl CustomDataCopy(LPCSTR fileName, int dataPointer);
+int __cdecl CustomDataCopy(LPCSTR fileName, void* dataPointer);
 
 
-#endif

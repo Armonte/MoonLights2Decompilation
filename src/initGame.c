@@ -54,7 +54,7 @@ int* p1_meter_Stocks = NULL;
 #ifdef _MSC_VER
 __declspec(dllimport)
 #endif
-void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
+void split_path(const char* path, char* drive, char* dir, char* fname, char* ext);
 
 #ifdef _MSC_VER
 __declspec(dllimport)
@@ -85,13 +85,17 @@ int HandleP2Inputs(void) {
     return 0;
 }
 
+int GameLoop(void) {
+    return 0;
+}
+
 extern int mainGameLoop();
 
 extern int updateRenderingData(uint32_t imageId, int renderFlag, int xOffset, int yOffset,
     int xPos, int yPos, int width, int height, int renderType);
 
 int CustomDirectoryProcessing(void);
-//void _splitpath(const char* path, char* drive, char* dir, char* fname, char* ext);
+//void split_path(const char* path, char* drive, char* dir, char* fname, char* ext);
 //void _makepath(char* path, const char* drive, const char* dir, const char* fname, const char* ext);
 //void CustomDataCopy(const char* path, void* array);
 int CustomAudioControl(void);
@@ -215,9 +219,9 @@ NcdFile ncd_array[] = {
 int initGame() {
     char customDirResult;
     int processedPixelCount;
-    uint8_t* toktoBitmapDataPtr;
+ //   uint8_t* toktoBitmapDataPtr;
  //   uint8_t* gradBitmapDataPtr;
-    int pixelIndex;
+ //   int pixelIndex;
     int gameLoopResult;
     int* resourceArrayPointer;
     int16_t* cpuSetPointer;
@@ -249,7 +253,7 @@ int initGame() {
     byte_6B2F74 = customDirResult;
     _splitpath_s(FullPath, drivePath, sizeof(drivePath), directoryPath, sizeof(directoryPath), fileName, sizeof(fileName), extension, sizeof(extension));
     _makepath_s(fullPathBuffer, sizeof(fullPathBuffer), drivePath, directoryPath, "lights2", "ncd");
-    CustomDataCopy(fullPathBuffer, (int)ncd_array);
+    CustomDataCopy(fullPathBuffer, ncd_array);
     dword_6B3004 = 0;
     byte_6B2BB8 = 0;
     byte_6B2BB9 = 0;
@@ -318,8 +322,8 @@ int initGame() {
                          //   nullsub_2();
                             continue;
                         case 2:
-                           // gameLoopResult = GameLoop();
-                            gameLoopResult = NULL;
+                            gameLoopResult = GameLoop();
+                        //    gameLoopResult = NULL;
                             if (gameLoopResult) {
                                 if (gameLoopResult == 1) {
                                     gametype_enabled = 10;
@@ -583,7 +587,7 @@ LABEL_76:
 
 void initAndRunGame()
 {
-    int bitmapDataOffset;
+    BYTE* bitmapDataOffset;
     char* BitmapColorTableSize;
     unsigned int horizontalPadding;
     unsigned int verticalPadding;
@@ -592,18 +596,19 @@ void initAndRunGame()
     int originalHeight;
     int outWidth;
 
-
     logoBitmapData = ProcessAndFindMatchingEntry("logo.bmp", 0, 0xFFFFF, 0);
     if (logoBitmapData)
     {
-        bitmapDataOffset = (byte*)ProcessBitmapData((int)logoBitmapData, 0, 0, &outWidth, &originalHeight);
-        BitmapColorTableSize = (char*)GetBitmapColorTableSize((int)logoBitmapData, 0);
-    //    UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
+        bitmapDataOffset = (BYTE*)ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
+        BitmapColorTableSize = GetBitmapColorTableSize((int)(uintptr_t)logoBitmapData, 0); // Proper casting to int
+
+        // UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;
-    //    InitAnimations();
+
+        // InitAnimations();
         frameCounter = 0;
-     //   setupGameEnvironment();
+        // setupGameEnvironment();
         do
         {
             if (frameCounter > 10 && (HandleP1Inputs() || HandleP2Inputs()))
@@ -611,7 +616,7 @@ void initAndRunGame()
             ++frameCounter;
             updateRenderingData(
                 0,
-                bitmapDataOffset,
+                (int)(uintptr_t)bitmapDataOffset, // Proper casting to int
                 -1,
                 0,
                 horizontalPadding,
@@ -620,9 +625,9 @@ void initAndRunGame()
                 originalHeight,
                 1);
             mainGameLoop();
-        //    ClearGlobalAnimControl();
+            // ClearGlobalAnimControl();
         } while (frameCounter < 240);
-    //    g_UpdateObject();
+        // g_UpdateObject();
         free(logoBitmapData);
     }
 }

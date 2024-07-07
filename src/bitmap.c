@@ -421,7 +421,7 @@ HPALETTE handleGlobalPalette(HPALETTE palette)
     return g_globalPalette;
 }
 
-int GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
+void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
     if (!bitmapHandle) {
         return 0;
     }
@@ -432,7 +432,7 @@ int GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
     }
 
     int colorTableSize = 0;
-    GetBitmapColorTableSize((void*)bitmapHandle, &colorTableSize);  // Assuming GetBitmapColorTableSize takes an int
+    GetBitmapColorTableSize((uint16_t)bitmapHandle, &colorTableSize);  // Assuming GetBitmapColorTableSize takes an int
 
     // Check again to ensure colorTableSize is valid
     if (colorTableSize < 0) {
@@ -455,7 +455,7 @@ int GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
         *height = *(DWORD*)(bitmapPtr + 22);
     }
 
-    return (int)bufferDetails; // Returning as int, although it is not strictly safe on all platforms
+    return (void*)bufferDetails; // Returning as int, although it is not strictly safe on all platforms
 }
 
 int flipImageVertically(char* imageData, int width, int height)
@@ -554,9 +554,11 @@ BYTE* __cdecl ProcessBitmapData(
         return 0;
 
     if (outColorCount)
-        *outColorCount = (DWORD)GetBitmapPalette((uintptr_t)bitmapHandle);
+        *outColorCount = (DWORD)(uintptr_t)GetBitmapPalette((int)(uintptr_t)bitmapHandle); // Proper casting
 
-    flipBitmapVertically((uintptr_t)bitmapHandle);
+    flipBitmapVertically(bitmapHandle);
+
+    // Assuming GetBitmapBufferDetails now returns a void*
     buffer = (BYTE*)GetBitmapBufferDetails(bitmapHandle, (DWORD*)&imgWidth, (DWORD*)&imgHeight);
     if (!buffer)
         return 0;
@@ -585,9 +587,8 @@ BYTE* __cdecl ProcessBitmapData(
         return 0;
 }
 
-int __cdecl flipBitmapVertically(int bitmapHandle)
-{
-    int bufferDetails; // edi
+int __cdecl flipBitmapVertically(void* bitmapHandle) {
+    void* bufferDetails; // edi
     unsigned int adjustedWidth; // eax
     unsigned int bitmapWidth; // [esp+Ch] [ebp-8h] BYREF
     int bitmapHeight; // [esp+10h] [ebp-4h] BYREF
@@ -595,18 +596,20 @@ int __cdecl flipBitmapVertically(int bitmapHandle)
     if (!bitmapHandle)
         return -1;
 
-    bufferDetails = GetBitmapBufferDetails((void*)bitmapHandle, &bitmapWidth, &bitmapHeight);
+    bufferDetails = GetBitmapBufferDetails(bitmapHandle, &bitmapWidth, &bitmapHeight);
     if (!bufferDetails)
         return -1;
 
-    bitmapWidth = (bitmapWidth * *(int*)(bitmapHandle + 28)) / 8
-        - ((((bitmapWidth * *(int*)(bitmapHandle + 28)) >> 31) ^ abs(bitmapWidth * *(int*)(bitmapHandle + 28)) & 7) == (bitmapWidth * *(int*)(bitmapHandle + 28)) >> 31)
+    int bitCount = *(int*)((char*)bitmapHandle + 28);
+    bitmapWidth = (bitmapWidth * bitCount) / 8
+        - ((((bitmapWidth * bitCount) >> 31) ^ (abs((int)(bitmapWidth * bitCount)) & 7)) == ((bitmapWidth * bitCount) >> 31))
         + 1;
+
     adjustedWidth = bitmapWidth >> 2;
     if ((bitmapWidth & 3) != 0)
         ++adjustedWidth;
 
-    return -(flipImageVertically(bufferDetails, 4 * adjustedWidth, bitmapHeight) == -1);
+    return -(flipImageVertically((char*)bufferDetails, 4 * adjustedWidth, bitmapHeight) == -1);
 }
 
 HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
@@ -631,19 +634,19 @@ int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
         *numEntries = 0;
     }
 
-    if (bitmapHandle <= 0) {
+    if (!bitmapHandle) {
         // Invalid bitmap handle
-        printf("GetBitmapColorTableSize: Invalid bitmap handle (<= 0).\n");
+        printf("GetBitmapColorTableSize: Invalid bitmap handle (NULL).\n");
         return 0;
     }
 
     __try {
-        int colorTableSize = *(int*)(bitmapHandle + 46);
+        int colorTableSize = *(int*)((char*)bitmapHandle + 46);
 
         printf("GetBitmapColorTableSize: Initial colorTableSize = %d\n", colorTableSize);
 
         if (colorTableSize == 0) {
-            int bitsPerPixel = *(int*)(bitmapHandle + 28);
+            int bitsPerPixel = *(int*)((char*)bitmapHandle + 28);
 
             printf("GetBitmapColorTableSize: bitsPerPixel = %d\n", bitsPerPixel);
 
@@ -667,7 +670,7 @@ int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
             }
         }
 
-        int colorTableOffset = bitmapHandle + 54;
+        int colorTableOffset = (int)((char*)bitmapHandle + 54);
 
         // Additional check to ensure we don't return an invalid offset
         if (colorTableOffset < 0) {

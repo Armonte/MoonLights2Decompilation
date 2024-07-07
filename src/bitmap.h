@@ -42,15 +42,16 @@ DWORD WriteBitmapToFile(LPCSTR filePath, LPCVOID buffer, LONG offset, DWORD buff
 
 BYTE* ProcessBitmapData(void* bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
 
+int isGraphicsInitialized(void);
 
 
 int setPixel(uint8_t colorIndex, int x, int y);
 
-int flipBitmapVertically(int bitmapHandle);
+int __cdecl flipBitmapVertically(void* bitmapHandle);
 
-int GetBitmapColorTableSize(int bitmapHandle, int* numEntries);
+int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries);
 
-int GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height);
+void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height);
 
 int flipImageVertically(char* imageData, int width, int height);
 

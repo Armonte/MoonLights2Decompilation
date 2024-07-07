@@ -92,15 +92,16 @@ int DecrementAndResetVariables(void)
 
 
 int updateGameState1() {
-    int index = 0;
     int successCount = 0;
     unsigned int i;
     DWORD* currentObject;
+    DWORD** resourceArray = (DWORD**)GlobalResourceArray;
     int result;
     int success;
 
     for (i = 0; i < (unsigned int)resourceArraySize; ++i) {
-        for (currentObject = *((DWORD**)GlobalResourceArray + index); currentObject; currentObject = (DWORD*)*currentObject) {
+        currentObject = resourceArray[i];
+        while (currentObject) {
             result = currentObject[1];
             if (result) {
                 if (result == 1) {
@@ -116,13 +117,12 @@ int updateGameState1() {
             if (!success) {
                 ++successCount;
             }
+            currentObject = (DWORD*)(uintptr_t)currentObject[0]; // Use uintptr_t for correct type casting
         }
-        index += 4;
     }
     cleanupResources();
     return successCount;
 }
-
 DWORD PerformDelayAction(int delayAmount) {
     DWORD currentTickCount = GetTickCount();
     DWORD endTickCount = currentTickCount + delayAmount;
@@ -149,7 +149,7 @@ int InitializeWindow(HDC deviceContext) {
         targetDC = GetDC(mainWindowHandle);
 
     compatibleDC = CreateCompatibleDC(targetDC);
-    bitmap = CreateBitmap(g_maxScreenWidth, g_maxScreenHeight, 1, nBitCount, g_bitDepth);
+    bitmap = CreateBitmap(g_maxScreenWidth, g_maxScreenHeight, 1, nBitCount, NULL);
     SelectObject(compatibleDC, bitmap);
 
     if (clientRect.right == g_maxScreenWidth && clientRect.bottom == g_maxScreenHeight)
