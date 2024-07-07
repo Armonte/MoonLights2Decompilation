@@ -61,6 +61,7 @@ HPALETTE GetBitmapPalette(int bitmapHandle);
 
 HPALETTE handleGlobalPalette(HPALETTE palette);
 
+int __cdecl UpdatePaletteEntries(int startIndex, UINT entryCount, char* colorData, unsigned int colorFormat);
 
 
 #endif // BITMAP_H

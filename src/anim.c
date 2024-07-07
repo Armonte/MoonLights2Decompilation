@@ -23,6 +23,144 @@ int g_animationDirection = 1;
 bool g_isAnimationReverse = false;
 uint8_t* g_screenBuffer = NULL;
 void* dword_4C0790 = NULL;
+int dword_4C07C0 = 0;
+int dword_4C07C4 = 0;
+
+int UpdateAnimationState(int pixelSize)
+{
+    int totalArea; // total area of the pixel size
+    int xSegmentCount; // x segment counter
+    int ySegmentCount; // y segment counter
+    int currentX; // current x position
+    int currentY; // current y position
+    int tempX; // temporary x position
+    int tempY; // temporary y position
+    int prevX; // previous x position
+    int prevY; // previous y position
+    int initialX; // initial x position
+    int initialY; // initial y position
+    int maxScreenX; // maximum screen X value
+    int pixelsToUpdate; // number of pixels to update
+    int screenWidthSegments; // width segments of the screen
+    int screenHeightSegments; // height segments of the screen
+    int screenXCount; // number of segments in the x direction
+    int totalPixels; // total number of pixels to process
+    int processedPixels; // number of processed pixels
+
+    if (dword_4C07C0 <= 1 || dword_4C07C4 >= dword_4C07C0)
+        return -1;
+    if (!dword_4C07C4)
+        return -1;
+
+    totalArea = pixelSize * pixelSize;
+    if (dword_4C07C0 >= totalArea)
+    {
+        if (dword_4C07C0 / totalArea)
+        {
+            maxScreenX = dword_4C07C4 / (dword_4C07C0 / totalArea);
+        }
+        else
+        {
+            if (dword_4C07C0 - totalArea > dword_4C07C4)
+                return 0;
+            maxScreenX = totalArea + dword_4C07C4 - dword_4C07C0;
+        }
+        if (maxScreenX >= totalArea)
+            return -1;
+    }
+    else
+    {
+        maxScreenX = dword_4C07C4 * (totalArea / dword_4C07C0);
+    }
+
+    screenXCount = (((uint64_t)(g_maxScreenWidth / pixelSize) - 1) >> 32) + 1;
+    if (((((uint64_t)(g_maxScreenHeight / pixelSize) - 1) >> 32) + 1) > 0)
+    {
+        screenWidthSegments = 0;
+        processedPixels = (((uint64_t)(g_maxScreenHeight / pixelSize) - 1) >> 32) + 1;
+        do
+        {
+            if (screenXCount > 0)
+            {
+                xSegmentCount = 0;
+                totalPixels = screenXCount;
+                do
+                {
+                    ySegmentCount = 0;
+                    currentX = 0;
+                    currentY = 0;
+                    pixelsToUpdate = 0;
+                    while (1)
+                    {
+                        while (1)
+                        {
+                            screenHeightSegments = pixelSize - pixelsToUpdate;
+                            if (pixelSize - pixelsToUpdate <= currentX)
+                                break;
+                            ++currentY;
+                            setPixel(0, currentX + xSegmentCount, ySegmentCount + screenWidthSegments);
+                            if (currentY >= maxScreenX)
+                                goto LABEL_36;
+                            ++currentX;
+                        }
+                        if (currentY >= maxScreenX)
+                            break;
+                        tempX = currentX - 1;
+                        tempY = ySegmentCount + 1;
+                        if (screenHeightSegments > tempY)
+                        {
+                            do
+                            {
+                                ++currentY;
+                                setPixel(0, tempX + xSegmentCount, tempY + screenWidthSegments);
+                                if (currentY >= maxScreenX)
+                                    goto LABEL_36;
+                            } while (screenHeightSegments > ++tempY);
+                        }
+                        if (currentY >= maxScreenX)
+                            break;
+                        prevX = tempY - 1;
+                        prevY = tempX - 1;
+                        if (pixelsToUpdate <= prevY)
+                        {
+                            do
+                            {
+                                ++currentY;
+                                setPixel(0, prevY + xSegmentCount, prevX + screenWidthSegments);
+                                if (currentY >= maxScreenX)
+                                    goto LABEL_36;
+                            } while (pixelsToUpdate <= --prevY);
+                        }
+                        if (currentY >= maxScreenX)
+                            break;
+                        initialX = prevY + 1;
+                        initialY = prevX - 1;
+                        if (++pixelsToUpdate <= initialY)
+                        {
+                            do
+                            {
+                                ++currentY;
+                                setPixel(0, initialX + xSegmentCount, initialY + screenWidthSegments);
+                                if (currentY >= maxScreenX)
+                                    goto LABEL_36;
+                            } while (pixelsToUpdate <= --initialY);
+                        }
+                        if (currentY >= maxScreenX)
+                            break;
+                        ySegmentCount = initialY + 1;
+                        currentX = initialX + 1;
+                    }
+                LABEL_36:
+                    xSegmentCount += pixelSize;
+                    --totalPixels;
+                } while (totalPixels);
+            }
+            screenWidthSegments += pixelSize;
+            --processedPixels;
+        } while (processedPixels);
+    }
+    return 0;
+}
 
 int updateAnimations(void) {
     if (g_screenBuffer == NULL || g_animationDirection == 0) {

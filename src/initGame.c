@@ -51,6 +51,7 @@ int spriteDataLimitArray = 0;
 int dword_6B2E14 = 0;
 int* p1_meter_Stocks = NULL;
 
+
 #ifdef _MSC_VER
 __declspec(dllimport)
 #endif
@@ -601,7 +602,7 @@ void initAndRunGame()
         int colorTableSize = GetBitmapColorTableSize(logoBitmapData, 0); // Proper casting
         BitmapColorTableSize = (char*)(uintptr_t)colorTableSize; // Proper casting to char*
 
-        // UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
+        UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;
 

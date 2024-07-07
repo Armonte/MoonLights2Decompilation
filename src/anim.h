@@ -14,10 +14,15 @@ extern int g_maxScreenHeight;
 extern int g_totalFrames;
 extern int g_currentFrame;
 
+extern int dword_4C07C0;
+extern int dword_4C07C4;
+extern int g_maxScreenWidth;
+extern int g_maxScreenHeight;
+
 int updateAnimations(void);
 
 extern int setPixel(uint8_t colorIndex, int x, int y);
-
+int UpdateAnimationState(int pixelSize);
 
 int disableAnimation(void);
 

@@ -3,8 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\anim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\anim.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\initGame.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -17,6 +21,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\bitmap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\bitmap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\main.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\FileUtils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -83,14 +91,6 @@
       "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\KeyboardManager.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\anim.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\anim.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\audio.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{33424678-DA54-4CE8-AF1B-6B7292A0A169}|MoonLights2Decompilation.vcxproj|solutionrelative:src\\audio.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -106,17 +106,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 229,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 0,
               "Title": "anim.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.c",
               "RelativeDocumentMoniker": "src\\anim.c",
               "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.c",
               "RelativeToolTip": "src\\anim.c",
-              "ViewState": "AQIAAGoAAAAAAAAAAABRwG0AAAAcAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-04T12:02:47.018Z",
               "IsPinned": true,
@@ -124,21 +124,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "anim.h",
-              "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h",
-              "RelativeDocumentMoniker": "src\\anim.h",
-              "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h",
-              "RelativeToolTip": "src\\anim.h",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAATAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2024-07-04T12:02:35.225Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "game.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\game.c",
               "RelativeDocumentMoniker": "src\\game.c",
@@ -152,7 +138,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "main.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\main.h",
               "RelativeDocumentMoniker": "src\\main.h",
@@ -166,13 +152,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "main.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\main.c",
               "RelativeDocumentMoniker": "src\\main.c",
               "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\main.c",
               "RelativeToolTip": "src\\main.c",
-              "ViewState": "AQIAAHUAAAAAAAAAAAAewIUAAAAjAAAA",
+              "ViewState": "AQIAAJ8AAAAAAAAAAAAQwLIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-04T09:54:07.904Z",
               "IsPinned": true,
@@ -180,7 +166,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "reg.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\reg.c",
               "RelativeDocumentMoniker": "src\\reg.c",
@@ -194,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "reg.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\reg.h",
               "RelativeDocumentMoniker": "src\\reg.h",
@@ -208,7 +194,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "ResourceUtils.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\ResourceUtils.c",
               "RelativeDocumentMoniker": "src\\ResourceUtils.c",
@@ -222,13 +208,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "initGame.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\initGame.c",
               "RelativeDocumentMoniker": "src\\initGame.c",
               "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\initGame.c",
               "RelativeToolTip": "src\\initGame.c",
-              "ViewState": "AQIAAAIBAAAAAAAAAAAewBABAAAYAAAA",
+              "ViewState": "AQIAAEsCAAAAAAAAAAAewFcCAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-04T10:37:29.313Z",
               "IsPinned": true,
@@ -236,7 +222,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "initGame.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\initGame.h",
               "RelativeDocumentMoniker": "src\\initGame.h",
@@ -250,13 +236,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "bitmap.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\bitmap.c",
               "RelativeDocumentMoniker": "src\\bitmap.c",
               "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\bitmap.c",
               "RelativeToolTip": "src\\bitmap.c",
-              "ViewState": "AQIAAMECAAAAAAAAAAAewNECAABnAAAA",
+              "ViewState": "AQIAAKsBAAAAAAAAAAAQwL4BAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
               "WhenOpened": "2024-07-04T11:32:23.977Z",
               "IsPinned": true,
@@ -281,7 +267,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 19,
               "Title": "timers.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\timers.c",
               "RelativeDocumentMoniker": "src\\timers.c",
@@ -294,7 +280,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "timers.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\timers.h",
               "RelativeDocumentMoniker": "src\\timers.h",
@@ -307,7 +293,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "joy.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\joy.c",
               "RelativeDocumentMoniker": "src\\joy.c",
@@ -333,7 +319,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "audio.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\audio.c",
               "RelativeDocumentMoniker": "src\\audio.c",
@@ -346,7 +332,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "KeyboardManager.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\KeyboardManager.c",
               "RelativeDocumentMoniker": "src\\KeyboardManager.c",
@@ -359,7 +345,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "FileUtils.c",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\FileUtils.c",
               "RelativeDocumentMoniker": "src\\FileUtils.c",
@@ -374,24 +360,37 @@
         },
         {
           "DockedWidth": 171,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "bitmap.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\bitmap.h",
               "RelativeDocumentMoniker": "src\\bitmap.h",
               "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\bitmap.h",
               "RelativeToolTip": "src\\bitmap.h",
-              "ViewState": "AQIAACIAAAAAAAAAAAAAADMAAAAAAAAA",
+              "ViewState": "AQIAAC0AAAAAAAAAAAAAAD8AAABtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2024-07-04T11:32:24.824Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 1,
+              "Title": "anim.h",
+              "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h",
+              "RelativeDocumentMoniker": "src\\anim.h",
+              "ToolTip": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\anim.h",
+              "RelativeToolTip": "src\\anim.h",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2024-07-04T12:02:35.225Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "joy.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\joy.h",
               "RelativeDocumentMoniker": "src\\joy.h",
@@ -404,7 +403,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "game.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\game.h",
               "RelativeDocumentMoniker": "src\\game.h",
@@ -417,7 +416,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "FileUtils.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\FileUtils.h",
               "RelativeDocumentMoniker": "src\\FileUtils.h",
@@ -430,7 +429,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "ResourceUtils.h",
               "DocumentMoniker": "C:\\Users\\stjra\\Documents\\GitHub\\MoonLights2Decompilation\\src\\ResourceUtils.h",
               "RelativeDocumentMoniker": "src\\ResourceUtils.h",

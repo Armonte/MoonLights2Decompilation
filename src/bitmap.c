@@ -12,6 +12,7 @@
 #define LOGPALETTE_SIZE 1032  // 0x408 bytes
 #define PALETTE_ENTRIES_SIZE 1024  // 256 * 4 bytes per entry
 
+
 #define COLOR_TABLE_1_SIZE 40    // 0x28 bytes
 #define COLOR_TABLE_2_SIZE 984   // 0x3D8 bytes
 
@@ -611,6 +612,7 @@ int __cdecl flipBitmapVertically(void* bitmapHandle) {
 
     return -(flipImageVertically((char*)bufferDetails, 4 * adjustedWidth, bitmapHeight) == -1);
 }
+
 HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
 {
     int colorTableSize; // eax
@@ -750,3 +752,64 @@ int isGraphicsInitialized(void)
 }
 
 
+int __cdecl UpdatePaletteEntries(int startIndex, UINT entryCount, char* colorData, unsigned int colorFormat)
+{
+    signed int entriesToUpdate; // ebx
+    PALETTEENTRY* destEntry; // edx
+    signed int i; // ecx
+    char* srcColor; // esi
+    signed int j; // eax
+    char redComponent; // cl
+    PALETTEENTRY* tempPalette; // [esp+10h] [ebp-4h]
+
+    if (colorFormat >= 2)
+        return -1;
+    if (startIndex >= 256)
+        return 0;
+    entriesToUpdate = entryCount;
+    if (!entryCount)
+        return 0;
+    if ((startIndex + entryCount) > 256)
+        entriesToUpdate = 256 - startIndex;
+    tempPalette = (PALETTEENTRY*)malloc(4 * entriesToUpdate);
+    if (!tempPalette)
+        return -1;
+    destEntry = tempPalette;
+    if (colorFormat)
+    {
+        srcColor = colorData;
+        if (entriesToUpdate > 0)
+        {
+            j = entriesToUpdate;
+            do
+            {
+                redComponent = srcColor[2];
+                ++destEntry;
+                srcColor += 4;
+                --j;
+                destEntry[-1].peRed = redComponent;
+                destEntry[-1].peGreen = *(srcColor - 3);
+                destEntry[-1].peBlue = *(srcColor - 4);
+                destEntry[-1].peFlags = 1;
+            } while (j);
+        }
+    }
+    else
+    {
+        memcpy(tempPalette, colorData, 4 * ((4 * entriesToUpdate) >> 2));
+        if (entriesToUpdate > 0)
+        {
+            i = entriesToUpdate;
+            do
+            {
+                destEntry->peFlags = 1;
+                ++destEntry;
+                --i;
+            } while (i);
+        }
+    }
+    memcpy(&g_gamePaletteEntries[startIndex], tempPalette, 4 * ((4 * entriesToUpdate) >> 2));
+    AnimatePalette(g_globalPalette, startIndex, entriesToUpdate, tempPalette);
+    free(tempPalette);
+    return -(g_globalPalette == 0);
+}
