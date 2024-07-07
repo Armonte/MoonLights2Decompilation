@@ -49,7 +49,7 @@ int setPixel(uint8_t colorIndex, int x, int y);
 
 int __cdecl flipBitmapVertically(void* bitmapHandle);
 
-int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries);
+int __cdecl GetBitmapColorTableSize(void* bitmapHandle, int* numEntries);
 
 void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height);
 

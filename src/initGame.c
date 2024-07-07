@@ -217,11 +217,11 @@ NcdFile ncd_array[] = {
 };
 
 int initGame() {
+    //   uint8_t* toktoBitmapDataPtr;
+//   uint8_t* gradBitmapDataPtr;
+//   int pixelIndex;
     char customDirResult;
     int processedPixelCount;
- //   uint8_t* toktoBitmapDataPtr;
- //   uint8_t* gradBitmapDataPtr;
- //   int pixelIndex;
     int gameLoopResult;
     int* resourceArrayPointer;
     int16_t* cpuSetPointer;
@@ -247,6 +247,7 @@ int initGame() {
     HBITMAP outBitmap;
     DWORD outColorCount;
 
+
     printf("%s", VersionString);
     customDirResult = CustomDirectoryProcessing();
     byte_6B2E65 = 1;
@@ -268,9 +269,9 @@ int initGame() {
         return 0;
     processedPixelCount = 0;
     initAndRunGame();
-    title_bmp_data = 0;
-    psel_bmp_data = 0;
-    tokyo_bmp_data_pointer = 0;
+    //title_bmp_data = 0;
+    //psel_bmp_data = 0;
+    //tokyo_bmp_data_pointer = 0;
     uint8_t* title_bmp_data = (uint8_t*)ProcessBitmapData("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
     if (title_bmp_data) {
         ProcessBitmapData(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
@@ -306,8 +307,8 @@ int initGame() {
                     option_difficulty = 1;
                     option_timer = 3600;
                     roundsToWin = 2;
-                //    HandleGameOptionsRegistry();
-                //    InitializeGameResources();
+                    // HandleGameOptionsRegistry();
+                    // InitializeGameResources();
                     p2_char = 0;
                     gametype_enabled = 2;
                     character[0] = 0;
@@ -319,11 +320,11 @@ int initGame() {
                             gametype_enabled = 2;
                             continue;
                         case 1:
-                         //   nullsub_2();
+                            // nullsub_2();
                             continue;
                         case 2:
                             gameLoopResult = GameLoop();
-                        //    gameLoopResult = NULL;
+                            // gameLoopResult = NULL;
                             if (gameLoopResult) {
                                 if (gameLoopResult == 1) {
                                     gametype_enabled = 10;
@@ -337,20 +338,19 @@ int initGame() {
                             }
                             continue;
                         case 3:
-                            if (css_general() == -1) 
-                            {
+                            if (css_general() == -1) {
                                 byte_6B2BB9 = 0;
                                 gametype_enabled = 7;
                             }
                             else {
-                            //    nullsub_1(0, 0);
+                                // nullsub_1(0, 0);
                                 gametype_enabled = 5;
                             }
                             continue;
                         case 4:
-                         //   nullsub_3();
+                            // nullsub_3();
                             gametype_enabled = 0;
-                        //    MainEventLoop();
+                            // MainEventLoop();
                             continue;
                         case 5:
                             resourceArrayPointer = hitcount;
@@ -358,28 +358,26 @@ int initGame() {
                                 *resourceArrayPointer = 0;
                                 resourceArrayPointer += 71;
                             } while (resourceArrayPointer < (int*)byte_6B2DFC);
-                        //    MainBattle();
+                            // MainBattle();
                             gametype_enabled = 0;
                             if (!p1_setCPU[0] && !p2_setCPU || byte_6B2BB9 == 1) {
                                 gametype_enabled = 5;
-                                if (css_general() == -1)
-                                  {
+                                if (css_general() == -1) {
                                     byte_6B2BB9 = 0;
                                     gametype_enabled = 7;
                                 }
                                 else {
-                                //    nullsub_1(0, 0);
+                                    // nullsub_1(0, 0);
                                 }
                             }
                             continue;
                         case 6:
-                         //   mmManualPages();
+                            // mmManualPages();
                             gametype_enabled = 7;
                             continue;
                         case 7:
-                         //   audioReset();
-                            switch (mmBgScroll())
-                            {
+                            // audioReset();
+                            switch (mmBgScroll()) {
                             case 0:
                                 gametype_enabled = 3;
                                 break;
@@ -428,7 +426,7 @@ int initGame() {
                         case 8:
                             p1_setCPU[0] = 0;
                             p2_setCPU = 0;
-                        /*    if (css_general() == -1)
+                            /*    if (css_general() == -1)
                             {
                                 gametype_enabled = 7;
                             }
@@ -447,12 +445,11 @@ int initGame() {
                             continue;
                         case 9:
 
-                            if (css_general() == -1) 
-                            {
+                            if (css_general() == -1) {
                                 gametype_enabled = 7;
                             }
                             else {
-                                cpuSetPointer = p1_health;
+                                cpuSetPointer = (int16_t*)p1_health;
                                 do {
                                     *cpuSetPointer = 96;
                                     cpuSetPointer += 142;
@@ -489,14 +486,14 @@ int initGame() {
                             else {
                                 gameModeResult = 0;
                                 battleResult = 0;
-                                cpuCharPointer = p1_setCPU;
+                                cpuCharPointer = (int16_t*)p1_setCPU;
                                 do {
                                     if (!*cpuCharPointer)
                                         gameModeResult = battleResult;
                                     cpuCharPointer += 142;
                                     ++battleResult;
-                                } while (cpuCharPointer < (int16_t*)spriteDataLimitArray + 1);
-                                loopTimer = option_timer;
+                                } while ((uintptr_t)cpuCharPointer < (uintptr_t)spriteDataLimitArray + sizeof(int16_t));
+                                    loopTimer = option_timer;
                                 tempOptionDifficultyCopy = option_difficulty_copy;
                                 dword_6B2E08 = 1;
                                 option_difficulty_copy = 1;
@@ -552,14 +549,14 @@ int initGame() {
                                 gametype_enabled = 7;
                             }
                             else {
-                                charMeterPointer = p1_meter_Stocks;
+                                charMeterPointer = (int16_t**)p1_meter_Stocks;
                                 do {
                                     *charMeterPointer = 0;
                                     charMeterPointer += 142;
                                     *(charMeterPointer - 143) = 0;
                                     *(charMeterPointer - 148) = 0;
-                                } while (charMeterPointer < &p2_dataLimit + 1);
-                                savedRoundsTemp = roundsToWin;
+                                } while ((uintptr_t)charMeterPointer < (uintptr_t)(&p2_dataLimit + 1));
+                                    savedRoundsTemp = roundsToWin;
                                 roundsToWin = 3;
                                 sub_41F290();
                                 roundsToWin = savedRoundsTemp;
@@ -585,6 +582,7 @@ LABEL_76:
     return 0;
 }
 
+
 void initAndRunGame()
 {
     BYTE* bitmapDataOffset;
@@ -600,7 +598,8 @@ void initAndRunGame()
     if (logoBitmapData)
     {
         bitmapDataOffset = (BYTE*)ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
-        BitmapColorTableSize = GetBitmapColorTableSize((int)(uintptr_t)logoBitmapData, 0); // Proper casting to int
+        int colorTableSize = GetBitmapColorTableSize(logoBitmapData, 0); // Proper casting
+        BitmapColorTableSize = (char*)(uintptr_t)colorTableSize; // Proper casting to char*
 
         // UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;

@@ -432,7 +432,7 @@ void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
     }
 
     int colorTableSize = 0;
-    GetBitmapColorTableSize((uint16_t)bitmapHandle, &colorTableSize);  // Assuming GetBitmapColorTableSize takes an int
+    GetBitmapColorTableSize((void*)bitmapHandle, &colorTableSize);  // Assuming GetBitmapColorTableSize takes an int
 
     // Check again to ensure colorTableSize is valid
     if (colorTableSize < 0) {
@@ -611,7 +611,6 @@ int __cdecl flipBitmapVertically(void* bitmapHandle) {
 
     return -(flipImageVertically((char*)bufferDetails, 4 * adjustedWidth, bitmapHeight) == -1);
 }
-
 HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
 {
     int colorTableSize; // eax
@@ -621,15 +620,15 @@ HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
     if (!bitmapHandle)
         return 0;
 
-    colorTableSize = GetBitmapColorTableSize(bitmapHandle, &numEntries);
+    // Correct the cast to pass a pointer type
+    colorTableSize = GetBitmapColorTableSize((void*)(uintptr_t)bitmapHandle, &numEntries);
     if (colorTableSize && numEntries)
         return CreateCustomPalette(colorTableSize, numEntries);
     else
         return 0;
 }
 
-
-int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
+int __cdecl GetBitmapColorTableSize(void* bitmapHandle, int* numEntries) {
     if (numEntries) {
         *numEntries = 0;
     }
@@ -670,7 +669,8 @@ int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
             }
         }
 
-        int colorTableOffset = (int)((char*)bitmapHandle + 54);
+        char* colorTableOffsetPtr = (char*)bitmapHandle + 54;
+        intptr_t colorTableOffset = (intptr_t)colorTableOffsetPtr;
 
         // Additional check to ensure we don't return an invalid offset
         if (colorTableOffset < 0) {
@@ -681,9 +681,9 @@ int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
             *numEntries = colorTableSize;
         }
 
-        printf("GetBitmapColorTableSize: colorTableSize = %d, colorTableOffset = %d\n", colorTableSize, colorTableOffset);
+        printf("GetBitmapColorTableSize: colorTableSize = %d, colorTableOffset = %zd\n", colorTableSize, colorTableOffset);
 
-        return colorTableOffset;
+        return (int)colorTableOffset;
     }
     __except (EXCEPTION_EXECUTE_HANDLER) {
         // Handle the access violation
@@ -719,7 +719,7 @@ char* createGraphicsBuffer(int x, int y, int width, int height)
             continue;
         }
 
-        char* screenRow = g_bitDepth + g_maxScreenWidth * currentY;
+        char* screenRow = (char*)(uintptr_t)g_bitDepth + g_maxScreenWidth * currentY; // Proper casting
         char* bufferRow = buffer + (currentY - y) * width;
 
         int startX = (x < 0) ? -x : 0;

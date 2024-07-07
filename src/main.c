@@ -131,7 +131,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     FUN_0042a3f0();regmankeyconfig
     FUN_00429fe0();regmancheckloadsettings
        */
-    if (regManCheckLoadSettings(&settings, fullPath) == 0) {
+    if (regManCheckLoadSettings(&g_settings, fullPath) == 0) {
         printf("Settings and path loaded successfully.\n");
     } else {
         printf("Failed to load settings and path.\n");
