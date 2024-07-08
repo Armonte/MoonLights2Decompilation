@@ -372,7 +372,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 
-LRESULT CALLBACK MainDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK MainDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
  //   INT_PTR dialogResult;
     int browseResult;
     HWND controlHandle;
@@ -453,7 +453,7 @@ LRESULT CALLBACK MainDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPar
     return 0;
 }
 
-LRESULT OptionsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK OptionsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == 0x111) {
         if (wParam < IDC_FOLDER_PATH) {
             if (wParam != 0x409) {
@@ -498,11 +498,11 @@ LRESULT OptionsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-LRESULT KeyConfigDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK KeyConfigDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-LRESULT DirectSoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK DirectSoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == WM_INITDIALOG) {
         if (settings.directsound_enable != 0) {
             CheckRadioButton(hwnd, 0x408, 0x408, 0x408);
@@ -525,11 +525,11 @@ LRESULT DirectSoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     return 0;
 }
 
-LRESULT GameSpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK GameSpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-LRESULT DXDisplayDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK DXDisplayDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == 0x110) {
         if (settings.imagesize != 0) {
             CheckRadioButton(hwnd, 0x417, 0x417, 0x417);
@@ -575,7 +575,7 @@ LRESULT DXDisplayDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-LRESULT SpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK SpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == WM_INITDIALOG) {
         switch (g_gameSpeed) {
         case 0:
@@ -628,7 +628,7 @@ LRESULT SpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return 0;
 }
 
-LRESULT SoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+INT_PTR CALLBACK SoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     if (uMsg == WM_INITDIALOG) {
         if (settings.bgm != 0) {
             CheckRadioButton(hwnd, 0x420, 0x420, 0x420);

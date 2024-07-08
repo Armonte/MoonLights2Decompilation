@@ -44,17 +44,17 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 int InitDirectDraw(int mode, HWND hwnd);
 int DirectDrawSurfaceFunc();
 
-LRESULT MainDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  MainDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 int UseActiveWindow(LPCWSTR window_name);
 
 // Originally below keyconfig in the original but moved here for clarity
 void DDrawSomething();
 
-LRESULT KeyConfigDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT OptionsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT DirectSoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT GameSpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT DXDisplayDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT SpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-LRESULT SoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  KeyConfigDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  OptionsDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  DirectSoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  GameSpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  DXDisplayDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  SpeedDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+INT_PTR CALLBACK  SoundDialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
