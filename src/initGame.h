@@ -39,7 +39,7 @@ extern int dword_6B2E10;
 extern int* dword_6B2E60;
 extern int spriteDataLimitArray;
 extern int dword_6B2E14;
-extern int* p1_meter_Stocks;
+extern uint16_t p1_meter_Stocks;
 
 
 void initAndRunGame(void);

@@ -40,14 +40,14 @@ char* createGraphicsBuffer(int x, int y, int width, int height);
 
 DWORD WriteBitmapToFile(LPCSTR filePath, LPCVOID buffer, LONG offset, DWORD bufferSize);
 
-BYTE* ProcessBitmapData(int bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
+BYTE* __cdecl ProcessBitmapData(void* bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outHeight, int* outWidth);
 
 int isGraphicsInitialized(void);
 
 
 int setPixel(uint8_t colorIndex, int x, int y);
 
-int __cdecl flipBitmapVertically(int bitmapHandle);
+int __cdecl flipBitmapVertically(void* bitmapHandle);
 
 int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries);
 

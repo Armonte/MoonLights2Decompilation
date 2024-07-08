@@ -47,9 +47,14 @@ const char* a256ColorBmpFil = "256 color BMP file (*.bmp)|*.bmp|";
 void* off_43F2DC = NULL;  // Initialize this to the correct value if known
 
 
-int FindAndLoadBitmap(HWND windowHandle, const char* filter, char* fullPath, HANDLE* fileHandle, const char* defaultExtension)
+int  FindAndLoadBitmap(
+    HWND windowHandle,
+    const char* filter,
+    char* fullPath,
+    HANDLE* fileHandle,
+    const CHAR* defaultExtension)
 {
-    char defaultFilter[] = "All files (*.*)|*.*|";
+    const char* defaultFilter = "All files (*.*)|*.*|";
     char currentDirectory[MAX_PATH];
     char selectedFile[MAX_PATH] = { 0 };
     char fileFilter[MAX_PATH];
@@ -81,7 +86,7 @@ int FindAndLoadBitmap(HWND windowHandle, const char* filter, char* fullPath, HAN
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
     ofn.lpstrDefExt = defaultExtension;
 
-    if (!GetOpenFileNameA(&ofn))
+    if (!GetSaveFileNameA(&ofn))
         return 0;
 
     if (fullPath)
@@ -115,7 +120,6 @@ int FindAndLoadBitmap(HWND windowHandle, const char* filter, char* fullPath, HAN
 
     return 1;
 }
-
 WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* paletteData,
     int paletteSize, int colorOffset, unsigned int modifyZeroFlag,
     DWORD* outputSize, unsigned int flipFlag)
@@ -441,9 +445,11 @@ int __cdecl GetBitmapBufferDetails(int bitmapHandle, DWORD* width, DWORD* height
     int colorTableSize;
     int bufferDetails;
     colorTableSize = 0;
+
     GetBitmapColorTableSize(bitmapHandle, &colorTableSize);
     bufferDetails = bitmapHandle + 14 + (bitmapHandle + 14) + 4 * colorTableSize;
-
+    if (!bitmapHandle)
+        return 0;
     if (width) {
         *width = (bitmapHandle + 18);
     }
@@ -534,7 +540,7 @@ HPALETTE CreateCustomPalette(intptr_t colorTableSize, int numEntries)
 
 
 BYTE* __cdecl ProcessBitmapData(
-    int bitmapHandle,
+    void* bitmapHandle,
     HBITMAP* outBitmap,
     DWORD* outColorCount,
     int* outWidth,
@@ -552,12 +558,11 @@ BYTE* __cdecl ProcessBitmapData(
         return 0;
 
     if (outColorCount)
-        *outColorCount = (HPALETTE)GetBitmapPalette((int)bitmapHandle); // Proper casting
+        *outColorCount = (DWORD)GetBitmapPalette((int)bitmapHandle);
 
     flipBitmapVertically(bitmapHandle);
 
-    // Assuming GetBitmapBufferDetails now returns a void*
-    buffer = GetBitmapBufferDetails((int)bitmapHandle, (DWORD*)&width, (DWORD*)&height);
+    buffer = (BYTE*)GetBitmapBufferDetails((int)bitmapHandle, (DWORD*)&width, (DWORD*)&height);
     if (!buffer)
         return 0;
 
@@ -584,7 +589,7 @@ BYTE* __cdecl ProcessBitmapData(
     else
         return 0;
 }
-int __cdecl flipBitmapVertically(int bitmapHandle) {
+int __cdecl flipBitmapVertically(void* bitmapHandle) {
     int bufferDetails; // edi
     unsigned int adjustedWidth; // eax
     unsigned int bitmapWidth; // [esp+Ch] [ebp-8h] BYREF
@@ -593,7 +598,7 @@ int __cdecl flipBitmapVertically(int bitmapHandle) {
     if (!bitmapHandle)
         return -1;
 
-    bufferDetails = GetBitmapBufferDetails(bitmapHandle, &bitmapWidth, &bitmapHeight);
+    bufferDetails = GetBitmapBufferDetails((int)bitmapHandle, &bitmapWidth, &bitmapHeight);
     if (!bufferDetails)
         return -1;
 

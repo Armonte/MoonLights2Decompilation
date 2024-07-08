@@ -112,9 +112,9 @@ void lollmao() {
 // yes this should be normal winmain but shift-JIS is a curse upon this land
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
- /*   int iVar1;
-    int* IVar2;
-    int* puVar3;*/
+    //int iVar1;
+    //int* IVar2;
+    //int* puVar3;
 
 
     InitCommonControls();

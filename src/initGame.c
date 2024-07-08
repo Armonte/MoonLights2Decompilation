@@ -13,17 +13,14 @@
 #include "audio.h"
 #include "timers.h"
 #include <direct.h>
-uint8_t* p2_dataLimit = NULL;
 char FullPath[260] = { 0 };
-int g_globalTimerValue = 0;
 char VersionString[260] = "Version 1.0";
+uint8_t* p2_dataLimit = NULL;
+int g_globalTimerValue = 0;
+
+int dword_6B3004 = 0;
 uint8_t byte_6B2E65 = 0;
 uint8_t byte_6B2F74 = 0;
-uint8_t* title_bmp_data = NULL;
-uint8_t* psel_bmp_data = NULL;
-uint8_t* tokyo_bmp_data_pointer = NULL;
-uint8_t* grad_bmp_data = NULL;
-int dword_6B3004 = 0;
 uint8_t byte_6B2BB8 = 0;
 uint8_t byte_6B2BB9 = 0;
 int HITSTOP_SLOWDOWN[10] = { 0 }; // Assuming the size based on common usage
@@ -49,7 +46,34 @@ int dword_6B2E10 = 0;
 int* dword_6B2E60 = NULL;
 int spriteDataLimitArray = 0;
 int dword_6B2E14 = 0;
-int* p1_meter_Stocks = NULL;
+
+// Local Variables
+char customDirResult; // al
+int processedPixelCount; // esi
+uint8_t* tokyoBitmapDataPtr; // eax
+uint8_t* gradBitmapDataPtr; // eax
+int gameLoopResult; // eax
+int* resourceArrayPointer; // eax
+int16_t* cpuSetPointer; // eax
+int savedOptionTimer; // esi
+int savedRoundsToWin; // edi
+int gameModeResult; // edi
+int battleResult; // eax
+int16_t* cpuCharPointer; // ecx
+int loopTimer; // esi
+int resetTimer; // esi
+int savedRounds; // edi
+int16_t* charMeterPointer; // eax
+int savedRoundsTemp; // esi
+int outWidth; // [esp+10h] [ebp-528h] BYREF
+int outHeight; // [esp+14h] [ebp-524h] BYREF
+char tempOptionDifficultyCopy; // [esp+18h] [ebp-520h]
+int optionDifficultyCopyTemp; // [esp+20h] [ebp-518h]
+char directoryPath[260]; // [esp+24h] [ebp-514h] BYREF
+char drivePath[260]; // [esp+128h] [ebp-410h] BYREF
+char fullPathBuffer[260]; // [esp+22Ch] [ebp-30Ch] BYREF
+char fileName[260]; // [esp+330h] [ebp-208h] BYREF
+char extension[260]; // [esp+434h] [ebp-104h] BYREF
 
 
 #ifdef _MSC_VER
@@ -110,7 +134,7 @@ HPALETTE handleGlobalPalette(HPALETTE palette);
 //void initAndRunGame(void);
 void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset, size_t Size, size_t* processedSize);
 
-BYTE* ProcessBitmapData(int bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
+//BYTE* __cdecl ProcessBitmapData(int bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
 
 void LoadSfxFileBundle(void);
 void HandleGameOptionsRegistry(void);
@@ -220,35 +244,44 @@ NcdFile ncd_array[] = {
 };
 
 int initGame() {
-    uint8_t* tokyoBitmapDataPtr;
-    uint8_t* gradBitmapDataPtr;
-//  int pixelIndex;
-    char customDirResult;
-    int processedPixelCount;
-    int gameLoopResult;
-    int* resourceArrayPointer;
-    int16_t* cpuSetPointer;
-    int savedOptionTimer;
-    int savedRoundsToWin;
-    int gameModeResult;
-    int battleResult;
-    int16_t* cpuCharPointer;
-    int loopTimer;
-    int resetTimer;
-    int savedRounds;
-    int16_t** charMeterPointer;
-    int savedRoundsTemp;
-    int outWidth;
-    int outHeight;
-    char tempOptionDifficultyCopy;
-    int optionDifficultyCopyTemp;
-    char directoryPath[260];
-    char drivePath[260];
-    char fullPathBuffer[260];
-    char fileName[260];
-    char extension[260];
+    void* tokyo_bmp_data_pointer = 0;
+
+    void* title_bmp_data = 0;
+    void* psel_bmp_data = 0;
+    void* grad_bmp_data = 0;
+
+    int p1_meter_Stocks = 0;
+
+//    uint8_t* tokyoBitmapDataPtr;
+//    uint8_t* gradBitmapDataPtr;
+////  int pixelIndex;
+//    char customDirResult;
+//    int processedPixelCount;
+//    int gameLoopResult;
+//    int* resourceArrayPointer;
+//    int16_t* cpuSetPointer;
+//    int savedOptionTimer;
+//    int savedRoundsToWin;
+//    int gameModeResult;
+//    int battleResult;
+//    int16_t* cpuCharPointer;
+//    int loopTimer;
+//    int resetTimer;
+//    int savedRounds;
+//    int16_t** charMeterPointer;
+//    int savedRoundsTemp;
+//    int outWidth;
+//    int outHeight;
+//    char tempOptionDifficultyCopy;
+//    int optionDifficultyCopyTemp;
+//    char directoryPath[260];
+//    char drivePath[260];
+//    char fullPathBuffer[260];
+//    char fileName[260];
+//    char extension[260];
     HBITMAP outBitmap;
     DWORD outColorCount;
+
 
 
     printf("%s", VersionString);
@@ -272,22 +305,22 @@ int initGame() {
         return 0;
     processedPixelCount = 0;
     initAndRunGame();
-    title_bmp_data = 0;
-    psel_bmp_data = 0;
-    tokyo_bmp_data_pointer = 0;
+   // title_bmp_data = 0;
+   // psel_bmp_data = 0;
+   // tokyo_bmp_data_pointer = 0;
 
-    title_bmp_data = ProcessAndFindMatchingEntry("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+    title_bmp_data = ProcessAndFindMatchingEntry("title.bmp", 0, 0xfffff, 0);
     if (title_bmp_data) 
         {
-            ProcessAndFindMatchingEntry(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
-            psel_bmp_data = ProcessAndFindMatchingEntry("psel.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+            ProcessBitmapData(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
+            psel_bmp_data = ProcessAndFindMatchingEntry("psel.bmp", 0, 0xfffff, 0);
             if (psel_bmp_data) 
             {
                 ProcessBitmapData(psel_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
-                tokyo_bmp_data_pointer = ProcessAndFindMatchingEntry("tokyo.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+                tokyo_bmp_data_pointer = ProcessAndFindMatchingEntry("tokyo.bmp", 0, 0xfffff, 0);
                 if (tokyo_bmp_data_pointer) 
                 {
-                    tokyoBitmapDataPtr = ProcessAndFindMatchingEntry(tokyo_bmp_data_pointer, &outBitmap, &outColorCount, &outHeight, &outWidth);
+                    tokyoBitmapDataPtr = ProcessBitmapData(tokyo_bmp_data_pointer, &outBitmap, &outColorCount, &outHeight, &outWidth);
                     if (outHeight * outWidth > 0) {
                         int processedPixelCount = 0;
                         do {
@@ -295,9 +328,9 @@ int initGame() {
                             ++processedPixelCount;
                         } while (outHeight * outWidth > processedPixelCount);
                     }
-                grad_bmp_data = ProcessAndFindMatchingEntry("grad.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+                grad_bmp_data = ProcessAndFindMatchingEntry("grad.bmp", 0, 0xfffff, 0);
                 if (grad_bmp_data) {
-                    gradBitmapDataPtr = ProcessAndFindMatchingEntry(grad_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
+                    gradBitmapDataPtr = ProcessBitmapData(grad_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
                     for (int pixelIndex = 0; outHeight * outWidth > pixelIndex; ++pixelIndex)
                         *gradBitmapDataPtr++ -= 76;
                     // LoadSfxFileBundle();
@@ -556,7 +589,7 @@ int initGame() {
                                 gametype_enabled = 7;
                             }
                             else {
-                                charMeterPointer = (int16_t**)p1_meter_Stocks;
+                                charMeterPointer = (int16_t*)p1_meter_Stocks;
                                 do {
                                     *charMeterPointer = 0;
                                     charMeterPointer += 142;
@@ -592,20 +625,20 @@ LABEL_76:
 
 void initAndRunGame()
 {
-    int bitmapDataOffset;
+    BYTE* bitmapDataOffset;
     char* BitmapColorTableSize;
     unsigned int horizontalPadding;
     unsigned int verticalPadding;
     int frameCounter;
-    void* logoBitmapData;
+    void* bitmapHandle;
     int originalHeight;
     int outWidth;
 
-    logoBitmapData = ProcessAndFindMatchingEntry("logo.bmp", 0, 0xFFFFF, 0);
-    if (logoBitmapData)
+    bitmapHandle = ProcessAndFindMatchingEntry("logo.bmp", 0, 0xFFFFF, 0);
+    if (bitmapHandle)
     {
-        bitmapDataOffset = (BYTE*)ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
-        BitmapColorTableSize = GetBitmapColorTableSize(logoBitmapData, 0);
+        bitmapDataOffset = ProcessBitmapData(bitmapHandle, 0, 0, &outWidth, &originalHeight);
+        BitmapColorTableSize = (char*)GetBitmapColorTableSize((int)bitmapHandle, 0);
         UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;
@@ -631,6 +664,6 @@ void initAndRunGame()
             clearGlobalAnimationControl();
         } while (frameCounter < 240);
         // g_UpdateObject();
-        free(logoBitmapData);
+        free(bitmapHandle);
     }
 }

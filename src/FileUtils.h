@@ -62,7 +62,11 @@ int __cdecl HandleDataProcessing(
     unsigned int offset,
     int length);
 
-void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset, size_t Size, size_t* processedSize);
+void* ProcessAndFindMatchingEntry(
+    const char* fileName,
+    unsigned int fileOffset,
+    size_t Size,
+    size_t* processedSize);
 
 void* __stdcall ReadPortionOfFile(LPCSTR lpFileName, unsigned int lDistanceToMove, DWORD nNumberOfBytesToRead, DWORD* lpNumberOfBytesRead);
 
