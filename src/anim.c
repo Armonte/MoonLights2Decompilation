@@ -324,14 +324,14 @@ void* __cdecl InitAnimationControl(HWND hwnd, int width, int height, int bitDept
 
     // Calculate bytesPerRow safely
     size_t bytesPerRow;
-    if (width > (SIZE_MAX - 7) / bitDepth) {
+    if ((size_t)width > (SIZE_MAX - 7) / (size_t)bitDepth) {
         return NULL; // width * bitDepth would overflow
     }
     bytesPerRow = ((size_t)width * (size_t)bitDepth + 7) / 8;
 
     // Calculate bufferSize safely
     size_t bufferSize;
-    if (height > SIZE_MAX / bytesPerRow) {
+    if ((size_t)height > SIZE_MAX / bytesPerRow) {
         return NULL; // height * bytesPerRow would overflow
     }
     bufferSize = (size_t)height * bytesPerRow;

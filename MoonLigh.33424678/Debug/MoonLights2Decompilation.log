@@ -1,11 +1,54 @@
 ﻿  anim.c
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\anim.c(327,15): warning C4018: '>': signed/unsigned mismatch
-C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\anim.c(334,16): warning C4018: '>': signed/unsigned mismatch
   audio.c
   bitmap.c
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(555,24): warning C4047: '=': 'DWORD' differs in levels of indirection from 'HPALETTE'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\bitmap.c(560,12): warning C4047: '=': 'BYTE *' differs in levels of indirection from 'int'
   FileUtils.c
   game.c
   initGame.c
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(279,63): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(279,63): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(279,75): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(279,75): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(279,103): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(282,57): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(282,57): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(282,69): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(282,69): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(282,97): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(283,69): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(283,69): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(283,81): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(283,81): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(283,109): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(286,35): warning C4047: 'function': 'int' differs in levels of indirection from 'uint8_t *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(286,35): warning C4024: 'ProcessBitmapData': different types for formal and actual parameter 1
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(287,83): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(287,83): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(287,95): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(287,95): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(287,123): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(290,94): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(290,94): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(290,106): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(290,106): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(290,134): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(298,73): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(298,73): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(298,85): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(298,85): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(298,113): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(300,84): warning C4047: 'function': 'unsigned int' differs in levels of indirection from 'HBITMAP *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(300,84): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 2
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(300,96): warning C4047: 'function': 'size_t' differs in levels of indirection from 'DWORD *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(300,96): warning C4024: 'ProcessAndFindMatchingEntry': different types for formal and actual parameter 3
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(300,124): warning C4020: 'ProcessAndFindMatchingEntry': too many actual parameters
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(607,53): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(607,53): warning C4024: 'ProcessBitmapData': different types for formal and actual parameter 1
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(607,26): warning C4047: '=': 'int' differs in levels of indirection from 'BYTE *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(608,56): warning C4047: 'function': 'int' differs in levels of indirection from 'void *'
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(608,56): warning C4024: 'GetBitmapColorTableSize': different types for formal and actual parameter 1
+C:\Users\stjra\Documents\GitHub\MoonLights2Decompilation\src\initGame.c(608,30): warning C4047: '=': 'char *' differs in levels of indirection from 'int'
   joy.c
   KeyboardManager.c
   main.c

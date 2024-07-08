@@ -125,7 +125,7 @@ WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* pale
     int rowCount;
     signed int remainingPixels;
     WORD* allocatedBuffer;
-    BYTE* pixelPtr;
+    BYTE* pixelData;
     WORD* resultBuffer;
     char* tempBuffer;
     char* alignedBuffer;
@@ -208,15 +208,15 @@ WORD* AllocateBuffer(char* sourceBuffer, int width, int height, const void* pale
             memcpy(allocatedBuffer + 1, bmpHeaderInfo, 0x34u);
             memcpy(allocatedBuffer + 27, paletteData, 4 * ((4 * paletteSize) >> 2));
             CopyAndManipulateMemoryBlock((char*)allocatedBuffer + 27, paletteSize);
-            pixelPtr = (BYTE*)(resultBuffer + bmpHeaderInfo[2]);
+            pixelData = (BYTE*)(resultBuffer + bmpHeaderInfo[2]);
             memcpy(resultBuffer + bmpHeaderInfo[2], currentSource, remainingPixels);
             if (colorOffset && remainingPixels > 0)
             {
                 do
                 {
-                    if (modifyZeroFlag || *pixelPtr)
-                        *pixelPtr += colorOffset;
-                    ++pixelPtr;
+                    if (modifyZeroFlag || *pixelData)
+                        *pixelData += colorOffset;
+                    ++pixelData;
                     --remainingPixels;
                 } while (remainingPixels);
             }
@@ -436,41 +436,23 @@ HPALETTE handleGlobalPalette(HPALETTE palette)
     return g_globalPalette;
 }
 
-void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height) {
-    if (!bitmapHandle) {
-        return 0;
-    }
+int __cdecl GetBitmapBufferDetails(int bitmapHandle, DWORD* width, DWORD* height) {
 
-    // Ensure bitmapHandle is a valid pointer before dereferencing
-    if (IsBadReadPtr(bitmapHandle, sizeof(int))) {
-        return 0;
-    }
-
-    int colorTableSize = 0;
-    GetBitmapColorTableSize((void*)bitmapHandle, &colorTableSize);  // Assuming GetBitmapColorTableSize takes an int
-
-    // Check again to ensure colorTableSize is valid
-    if (colorTableSize < 0) {
-        return 0;
-    }
-
-    uint8_t* bitmapPtr = (uint8_t*)bitmapHandle;
-    uintptr_t bufferDetails = (uintptr_t)bitmapPtr + 14 + *(int*)(bitmapPtr + 14) + 4 * colorTableSize;
-
-    // Ensure bufferDetailsPtr is a valid memory address
-    if (IsBadReadPtr((void*)bufferDetails, sizeof(int))) {
-        return 0;
-    }
+    int colorTableSize;
+    int bufferDetails;
+    colorTableSize = 0;
+    GetBitmapColorTableSize(bitmapHandle, &colorTableSize);
+    bufferDetails = bitmapHandle + 14 + (bitmapHandle + 14) + 4 * colorTableSize;
 
     if (width) {
-        *width = *(DWORD*)(bitmapPtr + 18);
+        *width = (bitmapHandle + 18);
     }
 
     if (height) {
-        *height = *(DWORD*)(bitmapPtr + 22);
+        *height = (bitmapHandle + 22);
     }
 
-    return (void*)bufferDetails; // Returning as int, although it is not strictly safe on all platforms
+    return bufferDetails;
 }
 
 int flipImageVertically(char* imageData, int width, int height)
@@ -552,67 +534,58 @@ HPALETTE CreateCustomPalette(intptr_t colorTableSize, int numEntries)
 
 
 BYTE* __cdecl ProcessBitmapData(
-    const char* filename,
+    int bitmapHandle,
     HBITMAP* outBitmap,
     DWORD* outColorCount,
     int* outWidth,
     int* outHeight)
 {
-    void* bitmapHandle; // Simulated bitmap handle
     BYTE* buffer; // edi
-    BYTE* pixelPtr; // ecx
+    BYTE* pixelData; // ecx
     int index; // edx
-    HBITMAP newBitmap; // eax
-    int imgHeight; // [esp+Ch] [ebp-8h] BYREF
-    int imgWidth; // [esp+10h] [ebp-4h] BYREF
+    HBITMAP createdBitmap; // eax
+    int height; // [esp+Ch] [ebp-8h] BYREF
+    int width; // [esp+10h] [ebp-4h] BYREF
 
-    // Simulate bitmap handle initialization
-    bitmapHandle = malloc(100); // Example size, adjust as needed
-    if (!bitmapHandle)
-        return 0;
-
-    // Simulate setting some values in the bitmap handle
-    ((int*)((char*)bitmapHandle + 46))[0] = 0; 
-    ((int*)((char*)bitmapHandle + 28))[0] = 8;
 
     if (!bitmapHandle)
         return 0;
 
     if (outColorCount)
-        *outColorCount = (DWORD)(uintptr_t)GetBitmapPalette((int)(uintptr_t)bitmapHandle); // Proper casting
+        *outColorCount = (HPALETTE)GetBitmapPalette((int)bitmapHandle); // Proper casting
 
     flipBitmapVertically(bitmapHandle);
 
     // Assuming GetBitmapBufferDetails now returns a void*
-    buffer = (BYTE*)GetBitmapBufferDetails(bitmapHandle, (DWORD*)&imgWidth, (DWORD*)&imgHeight);
+    buffer = GetBitmapBufferDetails((int)bitmapHandle, (DWORD*)&width, (DWORD*)&height);
     if (!buffer)
         return 0;
 
     if (outWidth)
-        *outWidth = imgWidth;
+        *outWidth = width;
     if (outHeight)
-        *outHeight = imgHeight;
+        *outHeight = height;
 
     if (*(int*)((char*)bitmapHandle + 28) <= 8u)
     {
-        pixelPtr = buffer;
-        for (index = 0; imgWidth * imgHeight > index; ++index)
-            *pixelPtr++ += 10;
+        pixelData = buffer;
+        for (index = 0; width * height > index; ++index)
+            *pixelData++ += 10;
     }
 
     if (!outBitmap)
         return buffer;
 
-    newBitmap = CreateBitmap(imgWidth, imgHeight, 1u, *(int*)((char*)bitmapHandle + 28), buffer);
-    *outBitmap = newBitmap;
+    createdBitmap = CreateBitmap(width, height, 1u, *(int*)((char*)bitmapHandle + 28), buffer);
+    *outBitmap = createdBitmap;
 
-    if (newBitmap)
+    if (createdBitmap)
         return buffer;
     else
         return 0;
 }
-int __cdecl flipBitmapVertically(void* bitmapHandle) {
-    void* bufferDetails; // edi
+int __cdecl flipBitmapVertically(int bitmapHandle) {
+    int bufferDetails; // edi
     unsigned int adjustedWidth; // eax
     unsigned int bitmapWidth; // [esp+Ch] [ebp-8h] BYREF
     int bitmapHeight; // [esp+10h] [ebp-4h] BYREF
@@ -645,7 +618,7 @@ HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
     if (!bitmapHandle)
         return 0;
 
-    colorTableSize = GetBitmapColorTableSize((void*)(uintptr_t)bitmapHandle, &numEntries);
+    colorTableSize = GetBitmapColorTableSize(bitmapHandle, &numEntries);
     if (colorTableSize && numEntries)
         return CreateCustomPalette(colorTableSize, numEntries);
     else
@@ -653,7 +626,7 @@ HPALETTE __cdecl GetBitmapPalette(int bitmapHandle)
 }
 
 
-int __cdecl GetBitmapColorTableSize(void* bitmapHandle, int* numEntries) {
+int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries) {
     if (numEntries) {
         *numEntries = 0;
     }

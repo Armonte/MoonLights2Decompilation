@@ -40,18 +40,18 @@ char* createGraphicsBuffer(int x, int y, int width, int height);
 
 DWORD WriteBitmapToFile(LPCSTR filePath, LPCVOID buffer, LONG offset, DWORD bufferSize);
 
-BYTE* ProcessBitmapData(void* bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
+BYTE* ProcessBitmapData(int bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
 
 int isGraphicsInitialized(void);
 
 
 int setPixel(uint8_t colorIndex, int x, int y);
 
-int __cdecl flipBitmapVertically(void* bitmapHandle);
+int __cdecl flipBitmapVertically(int bitmapHandle);
 
-int __cdecl GetBitmapColorTableSize(void* bitmapHandle, int* numEntries);
+int __cdecl GetBitmapColorTableSize(int bitmapHandle, int* numEntries);
 
-void* GetBitmapBufferDetails(void* bitmapHandle, DWORD* width, DWORD* height);
+int __cdecl GetBitmapBufferDetails(int bitmapHandle, DWORD* width, DWORD* height);
 
 int flipImageVertically(char* imageData, int width, int height);
 

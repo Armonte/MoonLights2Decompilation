@@ -110,7 +110,7 @@ HPALETTE handleGlobalPalette(HPALETTE palette);
 //void initAndRunGame(void);
 void* ProcessAndFindMatchingEntry(const char* fileName, unsigned int fileOffset, size_t Size, size_t* processedSize);
 
-BYTE* ProcessBitmapData(void* bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
+BYTE* ProcessBitmapData(int bitmapHandle, HBITMAP* outBitmap, DWORD* outColorCount, int* outWidth, int* outHeight);
 
 void LoadSfxFileBundle(void);
 void HandleGameOptionsRegistry(void);
@@ -220,9 +220,9 @@ NcdFile ncd_array[] = {
 };
 
 int initGame() {
-    //   uint8_t* toktoBitmapDataPtr;
-//   uint8_t* gradBitmapDataPtr;
-//   int pixelIndex;
+    uint8_t* tokyoBitmapDataPtr;
+    uint8_t* gradBitmapDataPtr;
+//  int pixelIndex;
     char customDirResult;
     int processedPixelCount;
     int gameLoopResult;
@@ -275,25 +275,29 @@ int initGame() {
     title_bmp_data = 0;
     psel_bmp_data = 0;
     tokyo_bmp_data_pointer = 0;
-    void* title_bmp_data = ProcessBitmapData("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
-    if (title_bmp_data) {
-        ProcessBitmapData(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
-        uint8_t* psel_bmp_data = (uint8_t*)ProcessBitmapData("psel.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
-        if (psel_bmp_data) {
-            ProcessBitmapData(psel_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
-            uint8_t* tokyo_bmp_data_pointer = ProcessBitmapData("tokyo.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
-            if (tokyo_bmp_data_pointer) {
-                uint8_t* toktoBitmapDataPtr = (uint8_t*)ProcessBitmapData(tokyo_bmp_data_pointer, &outBitmap, &outColorCount, &outHeight, &outWidth);
-                if (outHeight * outWidth > 0) {
-                    int processedPixelCount = 0;
-                    do {
-                        *toktoBitmapDataPtr++ -= 76;
-                        ++processedPixelCount;
-                    } while (outHeight * outWidth > processedPixelCount);
-                }
-                uint8_t* grad_bmp_data = (uint8_t*)ProcessBitmapData("grad.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+
+    title_bmp_data = ProcessAndFindMatchingEntry("title.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+    if (title_bmp_data) 
+        {
+            ProcessAndFindMatchingEntry(title_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
+            psel_bmp_data = ProcessAndFindMatchingEntry("psel.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+            if (psel_bmp_data) 
+            {
+                ProcessBitmapData(psel_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
+                tokyo_bmp_data_pointer = ProcessAndFindMatchingEntry("tokyo.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
+                if (tokyo_bmp_data_pointer) 
+                {
+                    tokyoBitmapDataPtr = ProcessAndFindMatchingEntry(tokyo_bmp_data_pointer, &outBitmap, &outColorCount, &outHeight, &outWidth);
+                    if (outHeight * outWidth > 0) {
+                        int processedPixelCount = 0;
+                        do {
+                            *tokyoBitmapDataPtr++ -= 76;
+                            ++processedPixelCount;
+                        } while (outHeight * outWidth > processedPixelCount);
+                    }
+                grad_bmp_data = ProcessAndFindMatchingEntry("grad.bmp", &outBitmap, &outColorCount, &outHeight, &outWidth);
                 if (grad_bmp_data) {
-                    uint8_t* gradBitmapDataPtr = (uint8_t*)ProcessBitmapData(grad_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
+                    gradBitmapDataPtr = ProcessAndFindMatchingEntry(grad_bmp_data, &outBitmap, &outColorCount, &outHeight, &outWidth);
                     for (int pixelIndex = 0; outHeight * outWidth > pixelIndex; ++pixelIndex)
                         *gradBitmapDataPtr++ -= 76;
                     // LoadSfxFileBundle();
@@ -588,7 +592,7 @@ LABEL_76:
 
 void initAndRunGame()
 {
-    BYTE* bitmapDataOffset;
+    int bitmapDataOffset;
     char* BitmapColorTableSize;
     unsigned int horizontalPadding;
     unsigned int verticalPadding;
@@ -601,8 +605,7 @@ void initAndRunGame()
     if (logoBitmapData)
     {
         bitmapDataOffset = (BYTE*)ProcessBitmapData(logoBitmapData, 0, 0, &outWidth, &originalHeight);
-        int colorTableSize = GetBitmapColorTableSize(logoBitmapData, 0); // Proper casting
-        BitmapColorTableSize = (char*)(uintptr_t)colorTableSize; // Proper casting to char*
+        BitmapColorTableSize = GetBitmapColorTableSize(logoBitmapData, 0);
         UpdatePaletteEntries(0, 99, BitmapColorTableSize, 1u);
         horizontalPadding = (256 - outWidth) >> 1;
         verticalPadding = (256 - originalHeight) >> 1;
